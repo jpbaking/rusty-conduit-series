@@ -1,0 +1,8 @@
+# Repositories cloned into this workspace by scripts/bootstrap.sh.
+# Columns (tab-separated): folder, GitHub owner/name, branch.
+# Order matters: the engine comes first because every other repo depends on it.
+rusty-conduit-engine	jpbaking/rusty-conduit-engine	main
+rusty-conduit	jpbaking/rusty-conduit	main
+rusty-conduit-ssh	jpbaking/rusty-conduit-ssh	main
+rusty-conduit-switch	jpbaking/rusty-conduit-switch	main
+rusty-conduit-gui	jpbaking/rusty-conduit-gui	main

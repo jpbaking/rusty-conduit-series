@@ -1,0 +1,10 @@
+# Re-include the member repositories for ripgrep-based search tools.
+# .gitignore hides them from git; .ignore takes precedence over .gitignore
+# in ripgrep, so searches from the workspace root still see their files.
+# Each repo's own .gitignore (target/, node_modules/, ...) still applies.
+# Keep this list in sync with repos.tsv and .gitignore.
+!/rusty-conduit-engine/
+!/rusty-conduit/
+!/rusty-conduit-ssh/
+!/rusty-conduit-switch/
+!/rusty-conduit-gui/

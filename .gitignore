@@ -1,0 +1,9 @@
+# Member repositories: independent git repos cloned by scripts/bootstrap.sh.
+# Keep this list in sync with repos.tsv and .ignore.
+/rusty-conduit-engine/
+/rusty-conduit/
+/rusty-conduit-ssh/
+/rusty-conduit-switch/
+/rusty-conduit-gui/
+
+.DS_Store
