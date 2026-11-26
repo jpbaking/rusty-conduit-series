@@ -215,9 +215,10 @@ When the owning doc lies inside a nested root, make the update there — but say
 
 ## Workspace Contract
 
-`rusty-conduit-series` is an agent workspace for the rusty-conduit family. It tracks only its own files (this doc, the harness shims, `repos.tsv`, `scripts/`, and the ignore files). The five member repos are independent git repositories, cloned into this folder, gitignored here, and indexed below as nested roots.
+`rusty-conduit-series` is an agent workspace for the rusty-conduit family. It tracks only its own files (this doc, `README.md`, the harness shims, `repos.tsv`, `scripts/`, and the ignore files). The five member repos are independent git repositories, cloned into this folder, gitignored here, and indexed below as nested roots.
 
 - **Bootstrap first.** On a fresh clone, or whenever a folder listed in `repos.tsv` is missing, run `scripts/bootstrap.sh` before any other work. Never clone, move, or rename a member repo by hand. Run `scripts/bootstrap.sh --pull` to fast-forward clean repos.
+- **Keep the README in step.** `README.md` is the human guide to this contract: setup commands, copy-paste prompts, and troubleshooting. When a change here alters a command, a flag, or what agents do on their own, update `README.md` in the same pass.
 - **Adding or removing a member repo.** Update `repos.tsv`, `.gitignore`, `.ignore`, and the Child DOX Index below together.
 - **Member repos keep their own rules.** For any file inside a member repo, walk this doc and then that repo's DOX tree. Never edit a member repo's DOX.md to resolve a conflict with this doc; report the conflict to the user.
 - **Commit where the file lives.** A change inside a member repo is committed in that repo, on its `main`, following that repo's history style. The workspace repo commits only workspace files. Commit or push only when the user asks.
@@ -247,7 +248,7 @@ When the user requests a durable behavior change, record it here or in the relev
 
 ## Feature Map
 
-- **Workspace bootstrap**: clones missing member repos and reports branch, remote, and dirty state. Start: `scripts/bootstrap.sh`. Files: `repos.tsv`, `.gitignore`, `.ignore`.
+- **Workspace bootstrap**: clones missing member repos and reports branch, remote, and dirty state. Start: `scripts/bootstrap.sh`. Files: `repos.tsv`, `.gitignore`, `.ignore`, `README.md`.
 - **Shared proxy engine**: HTTP/HTTPS and SOCKS engines, routing, upstream dialers, and MITM, used by every product. Start: `rusty-conduit-engine/src/lib.rs`. Detail in ./rusty-conduit-engine.
 - **Engine version pin**: the engine tag each consumer builds against. Start: `rusty-conduit-engine/Cargo.toml`. Files: `rusty-conduit/Cargo.toml`, `rusty-conduit-ssh/Cargo.toml`, `rusty-conduit-switch/Cargo.toml`, `rusty-conduit-gui/Cargo.toml`.
 - **Product CLIs and GUI**: direct proxy, SSH-tunnel proxy, rule-switching proxy, and the desktop app over all of them. Detail in ./rusty-conduit, ./rusty-conduit-ssh, ./rusty-conduit-switch, and ./rusty-conduit-gui.
