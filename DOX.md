@@ -228,7 +228,7 @@ When the owning doc lies inside a nested root, make the update there — but say
 - **Engine release order.**
   1. Change the engine and pass its verification.
   2. Record any behavior change in `rusty-conduit-engine/docs/DIVERGENCE-LEDGER.md`.
-  3. Bump the engine version and tag it `vX.Y.Z` in the engine repo.
+  3. Bump the engine version and create an annotated tag `vX.Y.Z` in the engine repo whose message holds the release notes: `git tag -a vX.Y.Z -F notes.md`, where `notes.md` is a subject line `rusty-conduit-engine vX.Y.Z`, a blank line, then one bullet per change, citing its divergence-ledger ID. Pushing the tag runs the engine's `release.yml`, which re-verifies the crate and creates the GitHub Release from the notes.
   4. In each consumer, bump the `tag`, refresh `Cargo.lock`, update every doc or comment that names the engine version, and pass its verification.
   5. Pin every consumer to the same engine tag unless the user says otherwise.
 - **Testing an unreleased engine.** To build a consumer against the local engine, add a `[patch."https://github.com/jpbaking/rusty-conduit-engine"]` entry pointing at `../rusty-conduit-engine` in a gitignored `.cargo/config.toml` inside that consumer. Never commit that file, or a `Cargo.lock` resolved against it.

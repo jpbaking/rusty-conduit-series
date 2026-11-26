@@ -68,7 +68,7 @@ Things agents already know from `DOX.md`, so you don't need to say them:
 
 **Release the engine and update the consumers**
 
-> Release rusty-conduit-engine as vX.Y.Z following the engine release order in DOX.md, then bump every consumer to that tag and update any docs that name the engine version. Stop before tagging and pushing so I can review.
+> Release rusty-conduit-engine as vX.Y.Z following the engine release order in DOX.md, with the release notes in the tag message, then bump every consumer to that tag and update any docs that name the engine version. Stop before tagging and pushing so I can review.
 
 **Test consumers against an unreleased engine**
 
