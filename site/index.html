@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>rusty-conduit: small, fast Rust proxies for dev, testing, and homelabs</title>
+  <meta name="description" content="Small, fast HTTP/HTTPS and SOCKS proxies in single Rust binaries, plus a desktop app that runs them all. Route traffic directly, through SSH, or through other proxies by rules. For development, testing, labs, and homelabs.">
+  <meta property="og:title" content="rusty-conduit">
+  <meta property="og:description" content="Small, fast HTTP/HTTPS and SOCKS proxies in single Rust binaries: direct, over SSH, or by rules. For dev, testing, and homelabs.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top"><img src="logo.svg" alt="" width="28" height="28"> rusty-conduit</a>
+      <nav aria-label="Sections">
+        <a href="#tools">Tools</a>
+        <a href="#flows">How it works</a>
+        <a href="#use-cases">Use cases</a>
+        <a href="#try">Try it</a>
+        <a href="#docs">Docs</a>
+        <a class="gh" href="https://github.com/jpbaking/rusty-conduit-series">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow">HTTP · HTTPS · SOCKS4/4a/5 · SSH · rules</p>
+        <h1>Small, fast proxies in single Rust binaries.</h1>
+        <p class="lede">Route traffic directly, through SSH, or through other proxies by rules. Run them on your laptop or in Docker, scale them out behind HAProxy, or drive them all from a desktop app.</p>
+        <div class="cta">
+          <a class="btn primary" href="#tools">Pick your tool</a>
+          <a class="btn" href="#try">Try it in 60 seconds</a>
+        </div>
+        <p class="notice"><strong>For development, testing, labs, and homelabs.</strong> These tools are well tested and built with care, but nothing here is promised to be production-ready, and the proxies have <strong>no inbound authentication</strong>. Keep them on loopback or a private network you control.</p>
+        <figure class="hero-fig">
+          <img src="img/hero.svg" width="960" height="410" alt="Browsers, CLIs, SDKs, agents and containers connect to rusty-conduit, which goes straight to the internet; rusty-conduit-ssh, which goes through an ssh -D tunnel to a bastion and a private network; or rusty-conduit-switch, which sends each connection direct, to an upstream proxy, or to block by the first matching rule.">
+        </figure>
+      </div>
+    </section>
+
+    <section id="why" class="band">
+      <div class="wrap">
+        <h2>Why people use it</h2>
+        <div class="grid features">
+          <article>
+            <h3>One binary, every client protocol</h3>
+            <p>HTTP forwarding, HTTPS <code>CONNECT</code>, SOCKS4, SOCKS4a, and SOCKS5, on separate ports or <strong>multiplexed on one port</strong>. Browsers, <code>curl</code>, package managers, SDKs, and agents all just work.</p>
+          </article>
+          <article>
+            <h3>SSH as an egress</h3>
+            <p>Point your tools at a local proxy and everything, DNS included, leaves through your bastion or homelab box. It auto-reconnects, and it can also share <em>your</em> connection with the remote host (<code>ssh -R</code>).</p>
+          </article>
+          <article>
+            <h3>Rules, not toggles</h3>
+            <p>Send <code>*.corp.example</code> to the office proxy, the homelab subnet over SSH, ads to <code>block</code>, and the rest direct. Failover chains, time-of-day rules, and hot reload with no dropped connections. Imports AirSwitch, ZeroOmega, and SwitchyOmega backups.</p>
+          </article>
+          <article>
+            <h3>See what your tools are doing</h3>
+            <p>Per-connection access logs (logfmt or JSON) name the rule, profile, and upstream each connection used. Opt-in HTTPS inspection with <strong>your own CA</strong>: none is ever auto-generated.</p>
+          </article>
+          <article>
+            <h3>Light on resources</h3>
+            <p>About 7–8 MB of RAM idle and 26–27 KB per open tunnel, as measured on Linux with the container images' defaults. Nothing is cached, and long silent connections stay open.</p>
+          </article>
+          <article>
+            <h3>Pure-Rust TLS</h3>
+            <p><code>rustls</code> + <code>ring</code>, with no OpenSSL. Prebuilt for Linux, macOS, and Windows on <code>amd64</code> and <code>arm64</code>, plus multi-arch container images.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="tools">
+      <div class="wrap">
+        <h2>Pick your tool</h2>
+        <p class="sub">All five are BSD-3-Clause and share one engine, so a fix lands in every tool at once.</p>
+        <div class="grid tools">
+          <article class="tool">
+            <h3><a href="https://github.com/jpbaking/rusty-conduit">rusty-conduit</a></h3>
+            <p>Run a local HTTP/SOCKS proxy, with logging, allow/block lists, or HTTPS inspection.</p>
+            <p class="get"><a href="https://github.com/jpbaking/rusty-conduit/releases">Releases</a> <code>ghcr.io/jpbaking/rusty-conduit:2</code></p>
+          </article>
+          <article class="tool">
+            <h3><a href="https://github.com/jpbaking/rusty-conduit-ssh">rusty-conduit-ssh</a></h3>
+            <p>Send everything through an SSH server (bastion, homelab, cloud VM), or let that server egress through you.</p>
+            <p class="get"><a href="https://github.com/jpbaking/rusty-conduit-ssh/releases">Releases</a> <code>ghcr.io/jpbaking/rusty-conduit-ssh:2</code></p>
+          </article>
+          <article class="tool">
+            <h3><a href="https://github.com/jpbaking/rusty-conduit-switch">rusty-conduit-switch</a></h3>
+            <p>Route each connection by rules to different upstream proxies, with failover and hot reload.</p>
+            <p class="get"><a href="https://github.com/jpbaking/rusty-conduit-switch/releases">Releases</a> <code>ghcr.io/jpbaking/rusty-conduit-switch:2</code></p>
+          </article>
+          <article class="tool">
+            <h3><a href="https://github.com/jpbaking/rusty-conduit-gui">Rusty Conduit GUI</a> <span class="tag">beta</span></h3>
+            <p>Do all of the above from a tray app, with saved Proxies and SSH Tunnels, an encrypted secret vault, and no dependence on <code>~/.ssh</code>.</p>
+            <p class="get"><a href="https://github.com/jpbaking/rusty-conduit-gui/releases">Releases</a> <code>.dmg</code> <code>.msi</code>/<code>.exe</code> <code>.deb</code> <code>.rpm</code> <code>.AppImage</code></p>
+          </article>
+          <article class="tool">
+            <h3><a href="https://github.com/jpbaking/rusty-conduit-engine">rusty-conduit-engine</a></h3>
+            <p>Embed the engine in your own Rust program.</p>
+            <p class="get">Git dependency pinned to a <a href="https://github.com/jpbaking/rusty-conduit-engine/releases">release tag</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="flows" class="band">
+      <div class="wrap">
+        <h2>How it works</h2>
+        <p class="sub">Three ways out, one engine. Pick a flow to see where your traffic goes.</p>
+        <div class="tabs" role="tablist" aria-label="Traffic flows">
+          <button type="button" role="tab" id="tab-direct" aria-controls="panel-direct" aria-selected="true">Direct</button>
+          <button type="button" role="tab" id="tab-ssh" aria-controls="panel-ssh" aria-selected="false">Through SSH</button>
+          <button type="button" role="tab" id="tab-switch" aria-controls="panel-switch" aria-selected="false">By rules</button>
+        </div>
+        <figure class="panel" role="tabpanel" id="panel-direct" aria-labelledby="tab-direct">
+          <a href="img/flow-direct.svg"><img src="img/flow-direct.svg" width="960" height="380" loading="lazy" alt="Apps connect to rusty-conduit on 127.0.0.1 port 3128 for HTTP or 1080 for SOCKS. It checks allow and block lists, logs each connection, and can inspect HTTPS when you turn it on. Allowed traffic goes out; a blocked host gets a 403 and is never contacted."></a>
+          <figcaption><strong><code>rusty-conduit</code></strong> listens on loopback, checks every connection against your allow and block lists, logs it, and sends it straight out. Blocked hosts get a <code>403</code> or a SOCKS rejection before any connection is made. <a href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/USE-CASES-BASIC.md#1-a-local-proxy-for-your-browser-and-tools">Recipe →</a></figcaption>
+        </figure>
+        <figure class="panel" role="tabpanel" id="panel-ssh" aria-labelledby="tab-ssh">
+          <a href="img/flow-ssh.svg"><img src="img/flow-ssh.svg" width="960" height="380" loading="lazy" alt="On your laptop, apps connect to rusty-conduit-ssh, which runs your own ssh and opens an encrypted, auto-reconnecting ssh -D tunnel to a bastion. From there traffic reaches hosts such as nas.home.internal, grafana.home.internal and db.internal, whose names resolve inside the private network."></a>
+          <figcaption><strong><code>rusty-conduit-ssh</code></strong> runs your system <code>ssh</code>, so your config, agent, <code>ProxyJump</code>, and 2FA prompts just work. Every connection and every DNS lookup for a proxied host goes through the bastion, so names that resolve only there work too. <a href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/USE-CASES-BASIC.md#4-reach-your-homelab-or-a-private-network-over-ssh">Recipe →</a></figcaption>
+        </figure>
+        <figure class="panel" role="tabpanel" id="panel-switch" aria-labelledby="tab-switch">
+          <a href="img/flow-switch.svg"><img src="img/flow-switch.svg" width="960" height="400" loading="lazy" alt="Apps connect to rusty-conduit-switch, which reads config.toml and reloads it live. Rules run top to bottom and the first match wins: office hosts go to the office proxy, the homelab subnet and names go to a SOCKS5 upstream such as rusty-conduit-ssh, an ad network is blocked, and everything else goes direct."></a>
+          <figcaption><strong><code>rusty-conduit-switch</code></strong> matches each connection against your rules, top to bottom, and sends it direct, to an upstream proxy, or to <code>block</code>. Edit <code>config.toml</code> and the change applies without dropping connections. <a href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/USE-CASES-BASIC.md#5-send-some-sites-through-another-proxy-and-the-rest-direct">Recipe →</a></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="use-cases">
+      <div class="wrap">
+        <h2>Use cases</h2>
+        <p class="sub">Recipes that combine the pieces. Each one has a guide, and most have a runnable Compose project.</p>
+        <div class="grid cases">
+          <article class="case">
+            <a class="case-img" href="img/uc-failover.svg"><img src="img/uc-failover.svg" width="640" height="300" loading="lazy" alt="A switch rule targets the chain vpn, ssh, direct. The vpn connect fails, so ssh serves the connection and direct is not tried."></a>
+            <h3>Failover chains</h3>
+            <p>Any rule target can be an ordered list. The next profile is tried only when the connect or handshake fails, never once bytes have flowed.</p>
+            <a class="more" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/USE-CASES-ADVANCED.md#1-failover-chains">Guide →</a>
+          </article>
+          <article class="case">
+            <a class="case-img" href="img/uc-mitm.svg"><img src="img/uc-mitm.svg" width="640" height="300" loading="lazy" alt="A client that trusts your CA connects over TLS to the proxy, which presents a certificate from your CA, opens its own verified TLS connection to the origin, and logs each request's method, full URL and status."></a>
+            <h3>Inspect HTTPS with your own CA</h3>
+            <p>See full URLs and status codes for HTTPS. Off by default, and no tool ever creates a CA for you. Upstream certificates are still verified.</p>
+            <a class="more" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/USE-CASES-ADVANCED.md#3-inspect-https-with-your-own-ca">Guide →</a>
+          </article>
+          <article class="case">
+            <a class="case-img" href="img/uc-reverse.svg"><img src="img/uc-reverse.svg" width="640" height="320" loading="lazy" alt="On a build box with no egress, an app uses a proxy on 127.0.0.1:8888 that ssh -R carries back to rusty-conduit-ssh on your laptop, which sends the traffic to the internet with private ranges blocked."></a>
+            <h3>Give a remote box internet through yours</h3>
+            <p>A VM or build box with no egress gets an HTTP and SOCKS proxy on its own loopback, carried back over <code>ssh -R</code> and out through your machine.</p>
+            <a class="more" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/USE-CASES-ADVANCED.md#5-give-a-remote-machine-internet-through-yours">Guide →</a>
+          </article>
+          <article class="case">
+            <a class="case-img" href="img/uc-sandbox.svg"><img src="img/uc-sandbox.svg" width="640" height="300" loading="lazy" alt="An agent or CI job on an internal network with no gateway can only reach the internet through a rusty-conduit proxy with an allow list: github.com and pypi.org are allowed, example.com gets a 403, and every attempt is logged."></a>
+            <h3>Egress sandbox for agents and CI</h3>
+            <p>Give an agent or an untrusted build exactly the destinations it needs, on a network whose only way out is the proxy, and log everything it tries.</p>
+            <a class="more" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/DOCKER-ADVANCED.md#5-an-egress-sandbox-network">Guide →</a>
+          </article>
+          <article class="case">
+            <a class="case-img" href="img/uc-scaleout.svg"><img src="img/uc-scaleout.svg" width="640" height="300" loading="lazy" alt="Clients connect to HAProxy, which balances across proxy replicas found through Docker DNS, so docker compose --scale adds or removes them."></a>
+            <h3>Scale out with HAProxy</h3>
+            <p>Run N identical replicas behind HAProxy in TCP mode. Docker DNS discovery picks up <code>--scale</code> changes within seconds, with a stats page per replica.</p>
+            <a class="more" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/DOCKER-ADVANCED.md#4-scale-out-with-haproxy-and-docker-dns">Guide →</a>
+          </article>
+          <article class="case">
+            <a class="case-img" href="img/uc-jump.svg"><img src="img/uc-jump.svg" width="640" height="300" loading="lazy" alt="rusty-conduit-ssh connects through jump1 and jump2 to an inner host, and an extra -L forward maps local port 5432 to db.internal."></a>
+            <h3>Jump hosts and port forwards</h3>
+            <p>Anything <code>ssh</code> can reach, the proxy can reach: <code>-J</code> chains, <code>ProxyJump</code>, and extra <code>-L</code> forwards after <code>--</code>. The GUI builds the same chain hop by hop.</p>
+            <a class="more" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/USE-CASES-ADVANCED.md#6-jump-hosts-and-port-forwards">Guide →</a>
+          </article>
+          <article class="case wide">
+            <a class="case-img" href="img/uc-homelab.svg"><img src="img/uc-homelab.svg" width="1100" height="360" loading="lazy" alt="Clients connect to one HAProxy that balances across scaled switch replicas. Their rules send traffic direct, to block, to an egress pool, or to an SSH tunnel pool that reaches the lab LAN, with egress failing over to the tunnel pool."></a>
+            <div>
+              <h3>The homelab stack</h3>
+              <p>Everything together in one Compose project: a switch pool routing to an egress pool and an SSH-tunnel pool behind one HAProxy, each scaled on its own, with optional MITM. It brings its own lab SSH server and private network, so <code>docker compose up</code> is all it takes.</p>
+              <a class="more" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/DOCKER-ADVANCED.md#6-the-homelab-stack">Guide →</a> <a class="more" href="https://github.com/jpbaking/rusty-conduit-series/tree/main/examples/homelab-stack">Example →</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="try" class="band">
+      <div class="wrap">
+        <h2>Try it in 60 seconds</h2>
+        <div class="steps">
+          <div>
+            <h3>With Docker</h3>
+            <div class="code"><button class="copy" type="button">Copy</button><pre><code>docker run --rm -p 127.0.0.1:3128:3128 -p 127.0.0.1:1080:1080 ghcr.io/jpbaking/rusty-conduit:2
+
+# in another terminal
+curl -x http://127.0.0.1:3128 https://example.com/
+curl --socks5-hostname 127.0.0.1:1080 https://example.com/</code></pre></div>
+          </div>
+          <div>
+            <h3>Through SSH</h3>
+            <p>With a <a href="https://github.com/jpbaking/rusty-conduit-ssh/releases">prebuilt binary</a> and your normal <code>~/.ssh/config</code>:</p>
+            <div class="code"><button class="copy" type="button">Copy</button><pre><code>rusty-conduit-ssh my-bastion
+curl --socks5-hostname 127.0.0.1:1080 http://grafana.homelab.internal/   # resolved on the bastion</code></pre></div>
+          </div>
+          <div>
+            <h3>A complete homelab, one command</h3>
+            <p>An SSH server, a private network, rule-based routing, and HAProxy balancing scaled pools:</p>
+            <div class="code"><button class="copy" type="button">Copy</button><pre><code>git clone https://github.com/jpbaking/rusty-conduit-series.git
+cd rusty-conduit-series/examples/homelab-stack
+docker compose up -d --build
+curl -x http://127.0.0.1:3128 http://internal-web/     # reachable only through the SSH tunnel
+open http://127.0.0.1:8404/                            # HAProxy stats: one row per replica</code></pre></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="docs">
+      <div class="wrap">
+        <h2>Documentation</h2>
+        <div class="grid docs">
+          <a class="doc" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/USE-CASES-BASIC.md">
+            <h3>Basic use cases</h3>
+            <p>A proxy for your tools, watching traffic, blocking destinations, reaching a homelab over SSH, routing some sites elsewhere, importing browser-extension rules.</p>
+          </a>
+          <a class="doc" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/USE-CASES-ADVANCED.md">
+            <h3>Advanced use cases</h3>
+            <p>Failover chains, split and time-based rules, HTTPS inspection, lab origins with self-signed certs, reverse proxies, jump hosts, egress sandboxes for agents and CI.</p>
+          </a>
+          <a class="doc" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/DOCKER-BASIC.md">
+            <h3>Docker: basics</h3>
+            <p>Images, <code>docker run</code>, Compose, a proxy for other containers, config, hot reload, logs, and hardening.</p>
+          </a>
+          <a class="doc" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/DOCKER-ADVANCED.md">
+            <h3>Docker: advanced</h3>
+            <p>Every GUI feature as Compose, SSH tunnels in containers, MITM with secrets, HAProxy scale-out with Docker DNS discovery, and the full homelab stack.</p>
+          </a>
+          <a class="doc" href="https://github.com/jpbaking/rusty-conduit-series/tree/main/examples">
+            <h3>Examples</h3>
+            <p>Runnable Compose projects, and a smoke test that checks each one.</p>
+          </a>
+          <a class="doc" href="https://github.com/jpbaking/rusty-conduit-series/blob/main/docs/WORKSPACE.md">
+            <h3>Contributing</h3>
+            <p>How the agent workspace clones the five product repos and how to work across them with coding agents.</p>
+          </a>
+        </div>
+        <p class="sub">Every product repo also has its own complete reference: every flag, environment variable, and TOML key, plus sizing figures and a MITM CA guide.</p>
+      </div>
+    </section>
+
+    <section id="agents" class="band">
+      <div class="wrap two">
+        <div>
+          <h2>For AI agents</h2>
+          <p>If you are an agent helping someone choose or set up a proxy:</p>
+          <ol>
+            <li>Pick the tool with the table in <a href="#tools">Pick your tool</a>. For rules, failover, or several upstreams, use <code>rusty-conduit-switch</code>; if SSH is involved, use <code>rusty-conduit-ssh</code>, or <code>rusty-conduit-switch</code> with a <code>rusty-conduit-ssh</code> upstream.</li>
+            <li>Start from the closest recipe in <a href="https://github.com/jpbaking/rusty-conduit-series/tree/main/docs"><code>docs/</code></a> or project in <a href="https://github.com/jpbaking/rusty-conduit-series/tree/main/examples"><code>examples/</code></a>, and adapt it. Check the result with <code>validate</code> (all three CLIs) and <code>test-route</code> (switch).</li>
+            <li>Keep listeners on <code>127.0.0.1</code>, or publish container ports as <code>127.0.0.1:PORT:PORT</code>. There is no proxy authentication.</li>
+            <li>Turn on HTTPS MITM only when the person asks for inspection, with a CA they create. Never generate or install a CA without asking first.</li>
+            <li>Describe the result as suitable for development and testing, not production.</li>
+          </ol>
+        </div>
+        <div>
+          <h2>Security at a glance</h2>
+          <ul>
+            <li><strong>No inbound authentication</strong> on any listener. Bind to loopback (the default) or a trusted private network.</li>
+            <li><strong>MITM decrypts traffic.</strong> Use it only on systems and traffic you are authorized to inspect, and protect the CA key.</li>
+            <li><strong>A reverse proxy (<code>ssh -R</code>) exposes your network</strong> to users of the SSH server. Keep its default loopback bind, set <code>GatewayPorts clientspecified</code> on the server, and add a blocklist.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p><img src="logo.svg" alt="" width="18" height="18"> rusty-conduit · BSD-3-Clause · <a href="https://github.com/jpbaking/rusty-conduit-series">Source on GitHub</a></p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+      function select(tab) {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute('aria-selected', on);
+          t.tabIndex = on ? 0 : -1;
+          document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+        });
+      }
+      tabs.forEach(function (t, i) {
+        t.addEventListener('click', function () { select(t); });
+        t.addEventListener('keydown', function (e) {
+          var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if (d) { var n = tabs[(i + d + tabs.length) % tabs.length]; select(n); n.focus(); }
+        });
+      });
+      if (tabs.length) select(tabs[0]);
+    })();
+    document.querySelectorAll('.copy').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var text = btn.parentElement.querySelector('code').innerText;
+        navigator.clipboard.writeText(text).then(function () {
+          btn.textContent = 'Copied';
+          setTimeout(function () { btn.textContent = 'Copy'; }, 1500);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300" role="img" aria-labelledby="title desc">
+<title id="title">An egress sandbox for agents and CI</title>
+<desc id="desc">An agent or CI job sits on an internal network with no gateway, so it has no route out except a rusty-conduit proxy with an allow list. github.com and pypi.org are allowed; example.com gets a 403. Every attempt is logged.</desc>
+<style>
+svg{--text:#e5e9f0;--muted:#9aa5b8;--node:#172033;--line:#3a4864;--zone:#64748b;--acc:#3b82f6;--acc2:#60a5fa;--ssh:#2dd4bf;--bad:#f87171;--ok:#4ade80;--hap:#a78bfa;--onacc:#fff}
+@media (prefers-color-scheme:light){svg{--text:#111827;--muted:#4b5568;--node:#f3f6fb;--line:#b8c3d4;--zone:#94a3b8;--acc:#2563eb;--acc2:#2563eb;--ssh:#0d9488;--bad:#dc2626;--ok:#16a34a;--hap:#7c3aed}}
+text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;fill:var(--text)}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.t{font-size:15px;font-weight:600}
+.s{font-size:12.5px;fill:var(--muted)}
+.c{font-size:13px;fill:var(--muted)}
+.zl{font-size:11.5px;font-weight:700;letter-spacing:.08em;fill:var(--zone)}
+.bad-t{fill:var(--bad)}.ok-t{fill:var(--ok)}
+.pt{fill:var(--onacc);font-size:15px;font-weight:700}
+.ps{fill:var(--onacc);opacity:.88;font-size:12.5px}
+.node{fill:var(--node);stroke:var(--line);stroke-width:1.5}
+.prod{fill:var(--acc)}
+.hap{fill:var(--node);stroke:var(--hap);stroke-width:2}
+.bad{fill:var(--node);stroke:var(--bad);stroke-width:1.8}
+.ok{fill:var(--node);stroke:var(--ok);stroke-width:1.8}
+.ghost{fill:none;stroke:var(--line);stroke-width:1.5;stroke-dasharray:5 5}
+.zone{fill:none;stroke:var(--zone);stroke-width:1.5;stroke-dasharray:6 6}
+.globe{fill:var(--node);stroke:var(--acc2);stroke-width:1.8}
+.f{fill:none;stroke-width:2.2;stroke-linecap:round;stroke-dasharray:8 7;animation:flow 1.1s linear infinite}
+.f-acc{stroke:var(--acc2)}.f-ssh{stroke:var(--ssh)}.f-bad{stroke:var(--bad)}.f-ok{stroke:var(--ok)}.f-hap{stroke:var(--hap)}
+.f-mute{stroke:var(--zone);animation:none;stroke-dasharray:4 5}
+.pipe{fill:none;stroke:var(--ssh);stroke-opacity:.2;stroke-width:24;stroke-linecap:round}
+.m-acc{fill:var(--acc2)}.m-ssh{fill:var(--ssh)}.m-bad{fill:var(--bad)}.m-ok{fill:var(--ok)}.m-hap{fill:var(--hap)}.m-mute{fill:var(--zone)}
+@keyframes flow{to{stroke-dashoffset:-30}}
+@media (prefers-reduced-motion:reduce){.f{animation:none}}
+</style>
+<defs><marker id="m-acc" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto"><path d="M0,0L10,5L0,10z" class="m-acc"/></marker><marker id="m-ssh" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto"><path d="M0,0L10,5L0,10z" class="m-ssh"/></marker><marker id="m-bad" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto"><path d="M0,0L10,5L0,10z" class="m-bad"/></marker><marker id="m-ok" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto"><path d="M0,0L10,5L0,10z" class="m-ok"/></marker><marker id="m-hap" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto"><path d="M0,0L10,5L0,10z" class="m-hap"/></marker><marker id="m-mute" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto"><path d="M0,0L10,5L0,10z" class="m-mute"/></marker></defs>
+<rect x="20" y="40" width="280" height="220" rx="14" class="zone"/>
+<text x="34" y="62" class="zl" text-anchor="start">INTERNAL NETWORK · NO GATEWAY</text>
+<rect x="40" y="110" width="140" height="60" rx="10" class="node"/>
+<text x="110.0" y="144.5" class="t" text-anchor="middle">agent / CI job</text>
+<path d="M180,140H227" class="f f-acc" marker-end="url(#m-acc)"/>
+<rect x="230" y="100" width="150" height="80" rx="10" class="prod"/>
+<text x="305.0" y="136.0" class="pt mono" text-anchor="middle">rusty-conduit</text>
+<text x="305.0" y="154.0" class="ps mono" text-anchor="middle">--allow list</text>
+<path d="M380,130C425,130 425,72 467,72" class="f f-ok" marker-end="url(#m-ok)"/>
+<rect x="470" y="50" width="150" height="44" rx="10" class="ok"/>
+<text x="545.0" y="76.5" class="t" text-anchor="middle">github.com</text>
+<path d="M380,140H467" class="f f-ok" marker-end="url(#m-ok)"/>
+<rect x="470" y="118" width="150" height="44" rx="10" class="ok"/>
+<text x="545.0" y="144.5" class="t" text-anchor="middle">pypi.org</text>
+<path d="M380,150C425,150 425,211 467,211" class="f f-bad" marker-end="url(#m-bad)"/>
+<rect x="470" y="186" width="150" height="50" rx="10" class="bad"/>
+<text x="545.0" y="207.0" class="t" text-anchor="middle">example.com</text>
+<text x="545.0" y="225.0" class="s" text-anchor="middle">403 · logged</text>
+<path d="M110,170V212" class="f f-bad" marker-end="url(#m-bad)"/>
+<circle cx="110" cy="226" r="11" class="bad"/><text x="110" y="231" class="t bad-t" text-anchor="middle">✕</text>
+<text x="130" y="231" class="c bad-t" text-anchor="start">no route out</text>
+<text x="320" y="288" class="s" text-anchor="middle">Every attempt is logged, allowed or not</text>
+</svg>
