@@ -1,0 +1,43 @@
+# Auto Switch: one front proxy that routes each connection by rules to named upstream
+# proxies, with failover chains and hot reload. Dev and testing only.
+#
+#   docker compose up -d
+#   curl -x http://127.0.0.1:3128 https://www.example.com/    # -> office-proxy
+#   docker compose logs office-proxy                          # the CONNECT arrived there
+#   docker compose stop office-proxy                          # failover to backup-proxy
+#   docker compose run --rm --no-deps switch test-route --config /etc/rusty-conduit-switch/config.toml www.example.com:443
+name: rcs-switch
+
+services:
+  switch:
+    image: ghcr.io/jpbaking/rusty-conduit-switch:2
+    restart: unless-stopped
+    command:
+      - --config
+      - /etc/rusty-conduit-switch/config.toml
+      - --watch-config
+      - --log-level
+      - DEBUG
+    ports:
+      - "127.0.0.1:3128:3128"
+      - "127.0.0.1:1080:1080"
+    volumes:
+      - ./conf:/etc/rusty-conduit-switch:ro   # mount the directory, not the file, for hot reload
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/3128"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # Stand-ins for real upstream proxies, so the example runs on its own.
+  office-proxy:
+    image: ghcr.io/jpbaking/rusty-conduit:2
+    command: ["--log-level", "DEBUG"]
+
+  backup-proxy:
+    image: ghcr.io/jpbaking/rusty-conduit:2
+    command: ["--log-level", "DEBUG"]

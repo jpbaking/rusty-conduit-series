@@ -1,0 +1,99 @@
+# Homelab stack: the GUI's Proxies and Tunnels as containers. Dev and testing only.
+#
+#   clients -> haproxy :3128/:1080 -> switch xN --rules--> direct
+#                                              \--> haproxy :13128 -> egress xN
+#                                              \--> haproxy :11080 -> tunnel xN -> SSH -> lab-lan
+#
+#   docker compose up -d --build
+#   curl -x http://127.0.0.1:3128 http://internal-web/        # rule: lab-via-tunnel
+#   curl -x http://127.0.0.1:3128 https://www.example.com/    # rule: example-via-egress
+#   docker compose up -d --scale switch=3 --scale tunnel=3    # HAProxy follows
+#   open http://127.0.0.1:8404/                               # pool health
+#
+# Replace the lab (keygen, sshd, internal-web) with your own server: docs/DOCKER-ADVANCED.md.
+name: rcs-homelab
+
+x-hardened: &hardened
+  restart: unless-stopped
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+
+services:
+  haproxy:
+    image: haproxy:3.2
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3128:3128"   # HTTP/HTTPS entry point
+      - "127.0.0.1:1080:1080"   # SOCKS4/4a/5 entry point
+      - "127.0.0.1:8404:8404"   # stats page
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    networks: [edge]
+
+  # Auto Switch: rules pick direct, block, egress, or tunnel for each connection.
+  switch:
+    <<: *hardened
+    image: ghcr.io/jpbaking/rusty-conduit-switch:2
+    deploy:
+      replicas: 2
+    command: ["--config", "/etc/rusty-conduit-switch/config.toml", "--watch-config", "--log-level", "DEBUG"]
+    volumes:
+      - ./conf:/etc/rusty-conduit-switch:ro
+    networks: [edge]
+
+  # Egress pool: plain proxies. In a homelab, give these a different route out
+  # (a VPN sidecar, another NIC or VLAN) so "egress" means something.
+  egress:
+    <<: *hardened
+    image: ghcr.io/jpbaking/rusty-conduit:2
+    deploy:
+      replicas: 2
+    networks: [edge]
+
+  # Tunnel pool: each replica keeps its own SSH connection to the server.
+  # Do not add reverse ports (-R) here: replicas would fight over the same remote port.
+  tunnel:
+    <<: *hardened
+    image: ghcr.io/jpbaking/rusty-conduit-ssh:2
+    deploy:
+      replicas: 2
+    command: ["lab", "-F", "/keys/config"]
+    volumes:
+      - keys:/keys:ro
+    depends_on:
+      keygen:
+        condition: service_completed_successfully
+    networks: [edge]
+
+  # --- Lab: a stand-in SSH server and a private service behind it ----------------------
+
+  keygen:
+    build: ../lab/sshd
+    image: rcs-lab-sshd
+    command: ["lab-keygen"]
+    volumes:
+      - keys:/keys
+    networks: [edge]
+
+  sshd:
+    image: rcs-lab-sshd
+    restart: unless-stopped
+    depends_on:
+      keygen:
+        condition: service_completed_successfully
+    volumes:
+      - keys:/keys:ro
+    networks: [edge, lab-lan]
+
+  internal-web:
+    image: traefik/whoami:latest
+    networks: [lab-lan]
+
+volumes:
+  keys:
+
+networks:
+  edge:
+  lab-lan:
+    internal: true

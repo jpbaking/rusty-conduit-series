@@ -1,0 +1,44 @@
+# Direct proxy: one rusty-conduit container for your host and for other containers.
+# Dev and testing only.
+#
+#   docker compose up -d
+#   curl -x http://127.0.0.1:3128 https://example.com/
+#   curl --socks5-hostname 127.0.0.1:1080 https://example.com/
+#   docker compose run --rm app          # a container that egresses through the proxy
+name: rcs-direct
+
+services:
+  proxy:
+    image: ghcr.io/jpbaking/rusty-conduit:2
+    restart: unless-stopped
+    command:
+      - --log-level
+      - DEBUG   # access records on stdout: docker compose logs -f proxy
+      - --block
+      - "*.doubleclick.net,169.254.169.254"   # example blocklist: an ad domain and cloud metadata
+    ports:
+      - "127.0.0.1:3128:3128"   # HTTP/HTTPS
+      - "127.0.0.1:1080:1080"   # SOCKS4/4a/5
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/3128"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # Any container on the same network reaches the proxy by its service name.
+  app:
+    image: curlimages/curl:latest
+    profiles: [demo]   # only runs with "docker compose run app"
+    command: ["-sS", "-o", "/dev/null", "-w", "%{http_code} via proxy\n", "https://example.com/"]
+    environment:
+      http_proxy: http://proxy:3128
+      https_proxy: http://proxy:3128
+      HTTPS_PROXY: http://proxy:3128
+      no_proxy: localhost,127.0.0.1
+    depends_on:
+      proxy:
+        condition: service_healthy

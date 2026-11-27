@@ -1,0 +1,20 @@
+# Optional: turn on HTTPS MITM inspection on every switch replica, with your own CA.
+# Dev and testing only, and only on traffic you are allowed to inspect.
+#
+#   Create secrets/ca.pem and secrets/ca.key first (see docs/DOCKER-ADVANCED.md), then:
+#   docker compose -f compose.yaml -f compose.mitm.yaml up -d --build
+#   curl --cacert secrets/ca.pem -x http://127.0.0.1:3128 https://www.example.com/
+#
+# All replicas share one CA, so clients trust the pool as one proxy.
+services:
+  switch:
+    environment:
+      RUSTY_CONDUIT_SWITCH_MITM_CA_CERT: /run/secrets/ca_cert
+      RUSTY_CONDUIT_SWITCH_MITM_CA_KEY: /run/secrets/ca_key
+    secrets: [ca_cert, ca_key]
+
+secrets:
+  ca_cert:
+    file: ./secrets/ca.pem
+  ca_key:
+    file: ./secrets/ca.key   # Linux hosts: must be readable by UID 10001 (see the guide)

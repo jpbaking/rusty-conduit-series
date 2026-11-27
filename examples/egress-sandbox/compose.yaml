@@ -1,0 +1,55 @@
+# Egress sandbox: a client (an agent, a CI job, an untrusted build) on a network with no
+# route out, except through a proxy that allows only listed destinations and logs every
+# attempt. Dev and testing only.
+#
+#   docker compose up -d
+#   docker compose exec agent curl -sI https://github.com/                  # allowed
+#   docker compose exec agent curl -sI https://example.com/                 # 403 from the proxy
+#   docker compose exec agent curl -sI --noproxy '*' https://example.com/   # no route: times out
+#   docker compose logs egress-proxy                                        # every attempt
+name: rcs-egress-sandbox
+
+services:
+  egress-proxy:
+    image: ghcr.io/jpbaking/rusty-conduit:2
+    restart: unless-stopped
+    command:
+      # An allowlist on its own: everything else, cloud metadata and your LAN included, is
+      # denied. Do not add --block here: with both set, --allow only makes exceptions to
+      # the blocklist and everything else is allowed.
+      - --allow
+      - "github.com,*.github.com,*.githubusercontent.com,pypi.org,files.pythonhosted.org,registry.npmjs.org"
+      - --log-level
+      - DEBUG
+      - --log-format
+      - json
+    networks: [sandbox, internet]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/3128"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # Stand-in for your agent or build container. It sees only the sandbox network.
+  agent:
+    image: curlimages/curl:latest
+    entrypoint: ["sleep", "infinity"]
+    environment:
+      http_proxy: http://egress-proxy:3128
+      https_proxy: http://egress-proxy:3128
+      HTTP_PROXY: http://egress-proxy:3128
+      HTTPS_PROXY: http://egress-proxy:3128
+      no_proxy: localhost,127.0.0.1
+      NO_PROXY: localhost,127.0.0.1
+    networks: [sandbox]
+    depends_on:
+      egress-proxy:
+        condition: service_healthy
+
+networks:
+  sandbox:
+    internal: true   # no gateway: the proxy is the only way out
+  internet:

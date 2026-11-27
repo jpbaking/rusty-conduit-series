@@ -1,123 +1,107 @@
 # rusty-conduit-series
 
-Agent workspace for the rusty-conduit family. This repo holds only the agent
-rules (`DOX.md`) and a bootstrap script. The five product repos are cloned into
-it as independent git repos and are not tracked here.
+**Small, fast HTTP/HTTPS and SOCKS proxies in single Rust binaries, plus a desktop app that runs them all.** Route traffic directly, through SSH, or through other proxies by rules. Run them on your laptop or in Docker, and scale them out behind HAProxy when one instance isn't enough.
 
-| Folder | What it is |
-| --- | --- |
-| `rusty-conduit-engine/` | Shared proxy engine library. Every other repo depends on it. |
-| `rusty-conduit/` | Direct HTTP/HTTPS/SOCKS proxy CLI. |
-| `rusty-conduit-ssh/` | Proxy CLI that dials through an `ssh -D` tunnel. |
-| `rusty-conduit-switch/` | Rule-based proxy switcher CLI. |
-| `rusty-conduit-gui/` | Tauri desktop app. |
+> [!IMPORTANT]
+> **For development, testing, labs, and homelabs.** These tools are well tested and built
+> with care, but nothing here is promised to be production-ready, and the proxies have **no
+> inbound authentication**. Keep them on loopback or a private network you control.
 
-You don't need to remember the rules. Agents read `AGENTS.md`, which points
-them to `DOX.md`, and that file holds the full contract. This README is the
-short version for you: what to run, and what to say to an agent.
+[Choose a tool](#pick-your-tool) · [Try it in 60 seconds](#try-it-in-60-seconds) · [Use cases](docs/USE-CASES-BASIC.md) · [Docker](docs/DOCKER-BASIC.md) · [Scale out](docs/DOCKER-ADVANCED.md) · [For agents](#for-ai-agents)
 
-## Setup
+---
 
-New machine or fresh clone:
+## Why people use it
 
-```sh
-git clone git@github.com:jpbaking/rusty-conduit-series.git
-cd rusty-conduit-series
-scripts/bootstrap.sh
+- **One binary, every client protocol.** HTTP forwarding, HTTPS `CONNECT`, SOCKS4, SOCKS4a, and SOCKS5, on separate ports or **multiplexed on one port**. Browsers, `curl`, package managers, SDKs, and agents all just work.
+- **SSH as an egress.** Point your tools at a local proxy and everything, DNS included, leaves through your bastion or homelab box. It auto-reconnects, and it can also share *your* connection with the remote host (`ssh -R`).
+- **Rules, not toggles.** Send `*.corp.example` to the office proxy, the homelab subnet over SSH, ads to `block`, and the rest direct. Failover chains (`["vpn", "ssh", "direct"]`), time-of-day rules, and hot reload with no dropped connections. You can import AirSwitch, ZeroOmega, and SwitchyOmega backups.
+- **See what your tools are doing.** Per-connection access logs (logfmt or JSON) name the rule, profile, and upstream each connection used. Opt-in HTTPS inspection with **your own CA**: none is ever auto-generated.
+- **Light on resources.** About 7–8 MB of RAM idle and 26–27 KB per open tunnel, as measured on Linux with the container images' defaults. Nothing is cached, neither responses nor DNS, and long silent connections stay open.
+- **Pure-Rust TLS.** `rustls` + `ring`, with no OpenSSL. Prebuilt for Linux, macOS, and Windows on `amd64` and `arm64`, plus multi-arch container images.
+- **Point and click if you prefer.** The desktop app builds the same setups from a tray icon and a window, with an encrypted secret vault and no dependence on `~/.ssh`.
+
+## Pick your tool
+
+| You want to… | Use | Get it |
+| :--- | :--- | :--- |
+| Run a local HTTP/SOCKS proxy, with logging, allow/block lists, or HTTPS inspection | [**rusty-conduit**](https://github.com/jpbaking/rusty-conduit) | [Releases](https://github.com/jpbaking/rusty-conduit/releases) · `ghcr.io/jpbaking/rusty-conduit:2` |
+| Send everything through an SSH server (bastion, homelab, cloud VM), or let that server egress through you | [**rusty-conduit-ssh**](https://github.com/jpbaking/rusty-conduit-ssh) | [Releases](https://github.com/jpbaking/rusty-conduit-ssh/releases) · `ghcr.io/jpbaking/rusty-conduit-ssh:2` |
+| Route each connection by rules to different upstream proxies, with failover and hot reload | [**rusty-conduit-switch**](https://github.com/jpbaking/rusty-conduit-switch) | [Releases](https://github.com/jpbaking/rusty-conduit-switch/releases) · `ghcr.io/jpbaking/rusty-conduit-switch:2` |
+| Do all of the above from a tray app, with saved Proxies and SSH Tunnels | [**Rusty Conduit GUI**](https://github.com/jpbaking/rusty-conduit-gui) *(beta)* | [Releases](https://github.com/jpbaking/rusty-conduit-gui/releases): `.dmg`, `.msi`/`.exe`, `.deb`, `.rpm`, `.AppImage` |
+| Embed the engine in your own Rust program | [**rusty-conduit-engine**](https://github.com/jpbaking/rusty-conduit-engine) | Git dependency pinned to a release tag |
+
+All five are BSD-3-Clause and share one engine, so a fix lands in every tool at once.
+
+```text
+                       ┌──────────────────────┐
+  browser, curl,  ───► │ rusty-conduit        │ ───► internet
+  SDKs, agents,        │ rusty-conduit-ssh    │ ───► ssh ───► bastion ───► private network
+  containers           │ rusty-conduit-switch │ ───► rules ──► direct │ block │ proxy A │ proxy B │ …
+                       └──────────────────────┘
+                         HTTP · HTTPS · SOCKS4/4a/5 in; optional MITM with your CA
 ```
 
-Start of a work session, to fast-forward every clean repo:
+## Try it in 60 seconds
+
+With Docker:
 
 ```sh
-scripts/bootstrap.sh --pull
+docker run --rm -p 127.0.0.1:3128:3128 -p 127.0.0.1:1080:1080 ghcr.io/jpbaking/rusty-conduit:2
+
+# in another terminal
+curl -x http://127.0.0.1:3128 https://example.com/
+curl --socks5-hostname 127.0.0.1:1080 https://example.com/
 ```
 
-Check without changing anything (missing repos, wrong remote, branch,
-uncommitted changes):
+Through SSH, with a [prebuilt binary](https://github.com/jpbaking/rusty-conduit-ssh/releases) and your normal `~/.ssh/config`:
 
 ```sh
-scripts/bootstrap.sh --check
+rusty-conduit-ssh my-bastion
+curl --socks5-hostname 127.0.0.1:1080 http://grafana.homelab.internal/   # resolved on the bastion
 ```
 
-The script is safe to re-run. It never touches a repo with uncommitted changes,
-never switches branches, and never changes a remote.
-
-## Working with agents
-
-Start the agent (Claude Code, agy, Codex, Gemini CLI, Cline or OpenCode) **in
-this folder** for anything that spans repos, or inside one repo for work that
-stays there. Either way it loads the right rules on its own.
-
-Things agents already know from `DOX.md`, so you don't need to say them:
-
-- run bootstrap if a repo is missing;
-- commit each change in the repo that owns the file, never in this workspace;
-- commit, push or tag only when you ask;
-- follow each repo's own rules and verification commands;
-- the engine release order and the version-pin rules.
-
-### Prompts to copy
-
-**Change one repo**
-
-> In rusty-conduit-switch, add <feature>. Run its verification. Don't commit yet.
-
-**Change that spans repos**
-
-> Add <feature> to the engine and use it in rusty-conduit-ssh and rusty-conduit-gui. Follow the workspace DOX rules for cross-repo work.
-
-**Release the engine and update the consumers**
-
-> Release rusty-conduit-engine as vX.Y.Z following the engine release order in DOX.md, with the release notes in the tag message, then bump every consumer to that tag and update any docs that name the engine version. Stop before tagging and pushing so I can review.
-
-**Test consumers against an unreleased engine**
-
-> Build and test rusty-conduit-switch against my local rusty-conduit-engine using the `[patch]` override described in DOX.md. Don't commit the override or the lockfile.
-
-**Commit and push when you're happy**
-
-> Commit and push all repos that have changes.
-
-**Work with several phases, or that may span sessions**
-
-> Use the goal-ledger skill to plan <goal> in this workspace.
-
-**Run the work in visible herdr panes**
-
-> Do <task> using the herdr-subagent skill with <agent and model>.
-
-### Keeping the docs healthy
-
-| When | Say |
-| --- | --- |
-| Now and then, or before a release | "Use the dox-audit skill on every repo in this workspace." |
-| Audit found problems | "Use the dox-fix skill on <repo>." |
-| After a big refactor | "Use the dox-remap skill on <repo>." |
-| A new folder deserves its own doc | "Use the dox-child skill on <repo>/<folder>." |
-
-Agents update the docs as part of normal work. These skills are for cleanup.
-
-## Cloud or sandboxed agents
-
-Bootstrap clones over SSH by default. Without SSH keys, use HTTPS with a token
-that can read the private repos:
+Or run a complete, self-contained lab with one command: an SSH server, a private network, rule-based routing, and HAProxy balancing scaled pools:
 
 ```sh
-RCS_REMOTE_PREFIX=https://github.com/ scripts/bootstrap.sh
+git clone https://github.com/jpbaking/rusty-conduit-series.git
+cd rusty-conduit-series/examples/homelab-stack
+docker compose up -d --build
+curl -x http://127.0.0.1:3128 http://internal-web/     # reachable only through the SSH tunnel
+open http://127.0.0.1:8404/                            # HAProxy stats: one row per replica
 ```
 
-## Adding or removing a repo
+## Documentation
 
-> Add <owner/name> to this workspace as a member repo.
+| Guide | What's inside |
+| :--- | :--- |
+| [**Basic use cases**](docs/USE-CASES-BASIC.md) | A proxy for your tools, watching traffic, blocking destinations, reaching a homelab over SSH, routing some sites elsewhere, importing browser-extension rules |
+| [**Advanced use cases**](docs/USE-CASES-ADVANCED.md) | Failover chains, split and time-based rules, HTTPS inspection, lab origins with self-signed certs, reverse proxies, jump hosts, egress sandboxes for agents and CI |
+| [**Docker: basics**](docs/DOCKER-BASIC.md) | Images, `docker run`, Compose, a proxy for other containers, config, hot reload, logs, and hardening |
+| [**Docker: advanced**](docs/DOCKER-ADVANCED.md) | Every GUI feature as Compose, SSH tunnels in containers, MITM with secrets, **HAProxy scale-out with Docker DNS discovery**, and the full homelab stack |
+| [**Examples**](examples/) | Five runnable Compose projects, and a smoke test that checks each one |
+| [**Contributing and the agent workspace**](docs/WORKSPACE.md) | How this repo clones the five product repos and how to work across them with coding agents |
 
-The agent updates `repos.tsv`, `.gitignore`, `.ignore` and the Child DOX Index
-in `DOX.md` together. To do it by hand, change all four.
+Every product repo also has its own complete reference: every flag, environment variable, and TOML key, plus sizing figures and a MITM CA guide. The guides here link to the right page in each.
 
-## Troubleshooting
+## For AI agents
 
-| Symptom | Cause and fix |
-| --- | --- |
-| An agent's search finds nothing in the repos | `.ignore` is missing or out of date. It re-includes the gitignored repos for search tools. |
-| `bootstrap.sh` reports `origin is ..., expected ...` | The repo was renamed or cloned from elsewhere. Run `git -C <repo> remote set-url origin <url>`. |
-| `not pulled` | The repo has uncommitted changes or is on another branch. Commit, stash or switch, then run `--pull` again. |
-| An agent refuses to edit the engine and a consumer together | The engine's own `DOX.md` limits edits to that repo. Tell the agent the task comes from this workspace, or update that rule in the engine repo. |
+If you are an agent helping someone choose or set up a proxy:
+
+1. Pick the tool with the table in [Pick your tool](#pick-your-tool). If the person wants rules, failover, or several upstreams, use `rusty-conduit-switch`; if SSH is involved, use `rusty-conduit-ssh`, or `rusty-conduit-switch` with a `rusty-conduit-ssh` upstream.
+2. Start from the closest recipe in [`docs/`](docs/) or the closest project in [`examples/`](examples/), and adapt it instead of writing config from scratch. Check the result with `validate` (all three CLIs) and `test-route` (switch).
+3. Keep listeners on `127.0.0.1`, or publish container ports as `127.0.0.1:PORT:PORT`. There is no proxy authentication.
+4. Turn on HTTPS MITM only when the person asks for inspection, with a CA they create. Never generate or install a CA without asking first.
+5. Describe the result as suitable for development and testing, not production.
+
+To change the tools themselves, start your coding agent in a clone of this repo and read [`docs/WORKSPACE.md`](docs/WORKSPACE.md).
+
+## Security at a glance
+
+- **No inbound authentication** on any listener. Bind to loopback (the default) or a trusted private network.
+- **MITM decrypts traffic.** Use it only on systems and traffic you are authorized to inspect, and protect the CA key.
+- **A reverse proxy (`ssh -R`) exposes your network** to users of the SSH server. Keep its default loopback bind, set `GatewayPorts clientspecified` on the server, and add a blocklist.
+
+## License
+
+BSD-3-Clause. See [LICENSE](LICENSE).

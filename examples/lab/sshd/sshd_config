@@ -1,0 +1,12 @@
+# Lab sshd: key-only login as user "lab", TCP forwarding on, keys from the shared /keys volume.
+Port 22
+HostKey /keys/ssh_host_ed25519_key
+AuthorizedKeysFile /keys/authorized_keys
+PermitRootLogin no
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+AllowTcpForwarding yes
+# Honour the bind address the client asks for, so "-R 127.0.0.1:..." stays private.
+GatewayPorts clientspecified
+ClientAliveInterval 15
+ClientAliveCountMax 3

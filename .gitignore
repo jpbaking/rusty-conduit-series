@@ -7,3 +7,6 @@
 /rusty-conduit-gui/
 
 .DS_Store
+
+# Example secrets (MITM CAs, keys) are generated locally and never committed.
+/examples/**/secrets/

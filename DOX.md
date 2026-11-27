@@ -215,11 +215,12 @@ When the owning doc lies inside a nested root, make the update there — but say
 
 ## Workspace Contract
 
-`rusty-conduit-series` is an agent workspace for the rusty-conduit family. It tracks only its own files (this doc, `README.md`, the harness shims, `repos.tsv`, `scripts/`, and the ignore files). The five member repos are independent git repositories, cloned into this folder, gitignored here, and indexed below as nested roots.
+`rusty-conduit-series` is an agent workspace for the rusty-conduit family. It is also the public start page for the products. It tracks only its own files (this doc, `README.md`, `LICENSE`, `docs/`, `examples/`, the harness shims, `repos.tsv`, `scripts/`, and the ignore files). The five member repos are independent git repositories, cloned into this folder, gitignored here, and indexed below as nested roots.
 
 - **Bootstrap first.** On a fresh clone, or whenever a folder listed in `repos.tsv` is missing, run `scripts/bootstrap.sh` before any other work. Never clone, move, or rename a member repo by hand. Run `scripts/bootstrap.sh --pull` to fast-forward clean repos.
-- **Keep the README in step.** `README.md` is the human guide to this contract: setup commands, copy-paste prompts, and troubleshooting. When a change here alters a command, a flag, or what agents do on their own, update `README.md` in the same pass.
-- **Adding or removing a member repo.** Update `repos.tsv`, `.gitignore`, `.ignore`, and the Child DOX Index below together.
+- **Keep the workspace guide in step.** `docs/WORKSPACE.md` is the human guide to this contract: setup commands, copy-paste prompts, and troubleshooting. When a change here alters a command, a flag, or what agents do on their own, update `docs/WORKSPACE.md` in the same pass.
+- **Public docs describe released products.** `README.md` (the marketing and start page), `docs/` (use cases and Docker guides), and `examples/` are for people evaluating the products. Present everything as for development, testing, labs, and homelabs; never promise production readiness. Check each claim against the owning repo's guide or code, link to that guide instead of copying its reference tables, and keep listeners on loopback in every example. When a product release changes a flag, default, or image tag these docs use, update them in the same pass.
+- **Adding or removing a member repo.** Update `repos.tsv`, `.gitignore`, `.ignore`, and the Child DOX Index below together, and the tool table in `README.md` if it is a product.
 - **Member repos keep their own rules.** For any file inside a member repo, walk this doc and then that repo's DOX tree. Never edit a member repo's DOX.md to resolve a conflict with this doc; report the conflict to the user.
 - **Commit where the file lives.** A change inside a member repo is committed in that repo, on its `main`, following that repo's history style. The workspace repo commits only workspace files. Commit or push only when the user asks.
 - **Check the branch before editing.** Before editing a member repo, confirm it is on its listed branch and has no uncommitted changes that are not yours. `scripts/bootstrap.sh` reports both.
@@ -238,6 +239,8 @@ When the owning doc lies inside a nested root, make the update there — but say
 
 - `scripts/bootstrap.sh --check` exits 0: every member repo is present, has the expected `origin`, and is reported with its branch and dirty state.
 - `bash -n scripts/bootstrap.sh` passes after any change to the script.
+- For changes under `examples/`, follow `examples/DOX.md` Verification (`examples/smoke-test.sh <example>`).
+- For changes to `README.md` or `docs/`, every relative link resolves, and every command or config snippet that is not already covered by an example has been run against the released image or binary.
 - For changes inside a member repo, run that repo's own Verification from its root DOX.md.
 
 ## User Preferences
@@ -248,14 +251,18 @@ When the user requests a durable behavior change, record it here or in the relev
 
 ## Feature Map
 
-- **Workspace bootstrap**: clones missing member repos and reports branch, remote, and dirty state. Start: `scripts/bootstrap.sh`. Files: `repos.tsv`, `.gitignore`, `.ignore`, `README.md`.
+- **Workspace bootstrap**: clones missing member repos and reports branch, remote, and dirty state. Start: `scripts/bootstrap.sh`. Files: `repos.tsv`, `.gitignore`, `.ignore`, `docs/WORKSPACE.md`.
+- **Public start page and guides**: product overview, tool chooser, agent guidance, use-case recipes, and Docker guides. Start: `README.md`. Files: `docs/USE-CASES-BASIC.md`, `docs/USE-CASES-ADVANCED.md`, `docs/DOCKER-BASIC.md`, `docs/DOCKER-ADVANCED.md`, `LICENSE`.
+- **Runnable examples**: Compose projects and their smoke test, including HAProxy scale-out. Detail in ./examples.
 - **Shared proxy engine**: HTTP/HTTPS and SOCKS engines, routing, upstream dialers, and MITM, used by every product. Start: `rusty-conduit-engine/src/lib.rs`. Detail in ./rusty-conduit-engine.
 - **Engine version pin**: the engine tag each consumer builds against. Start: `rusty-conduit-engine/Cargo.toml`. Files: `rusty-conduit/Cargo.toml`, `rusty-conduit-ssh/Cargo.toml`, `rusty-conduit-switch/Cargo.toml`, `rusty-conduit-gui/Cargo.toml`.
 - **Product CLIs and GUI**: direct proxy, SSH-tunnel proxy, rule-switching proxy, and the desktop app over all of them. Detail in ./rusty-conduit, ./rusty-conduit-ssh, ./rusty-conduit-switch, and ./rusty-conduit-gui.
 
 ## Child DOX Index
 
-Every child is a nested root: an independent repo cloned by `scripts/bootstrap.sh`, with its own full DOX tree. Index only; never rewrite it from here.
+- examples/: runnable Docker Compose projects behind the public docs, and their smoke test.
+
+The children below are nested roots: independent repos cloned by `scripts/bootstrap.sh`, each with its own full DOX tree. Index only; never rewrite them from here.
 
 - rusty-conduit-engine/: shared proxy engine library (`rusty_conduit_engine`); every other member depends on it.
 - rusty-conduit/: `rusty-conduit` CLI; a direct HTTP/HTTPS/SOCKS proxy on the engine.

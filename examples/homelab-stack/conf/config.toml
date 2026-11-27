@@ -1,0 +1,35 @@
+# Routing for the homelab stack, shared by every switch replica. Edit and save:
+# each replica hot-reloads it. Check it:
+#   docker compose run --rm --no-deps switch validate --config /etc/rusty-conduit-switch/config.toml
+#   docker compose run --rm --no-deps switch test-route --config /etc/rusty-conduit-switch/config.toml internal-web:80
+
+# Both profiles point at HAProxy, which balances the matching pool.
+[profiles.egress]
+type = "http"
+host = "haproxy"
+port = 13128
+
+[profiles.tunnel]
+type = "socks5"            # hostnames are sent unresolved and resolved on the SSH server
+host = "haproxy"
+port = 11080
+
+[routing]
+default = "direct"
+
+[[routing.rules]]
+name = "no-trackers"
+host_wildcard = ["*.doubleclick.net", "*.google-analytics.com"]
+target = "block"
+
+# Hosts that exist only behind the SSH server.
+[[routing.rules]]
+name = "lab-via-tunnel"
+host_wildcard = ["internal-web", "*.lab.internal"]
+target = "tunnel"
+
+# Pick an egress for chosen sites, with failover.
+[[routing.rules]]
+name = "example-via-egress"
+host_wildcard = ["*.example.com"]      # the apex and every subdomain
+target = ["egress", "tunnel", "direct"]

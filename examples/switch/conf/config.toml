@@ -1,0 +1,35 @@
+# rusty-conduit-switch routing for the switch example. Edit and save: it hot-reloads.
+# Check it:  docker compose run --rm --no-deps switch validate --config /etc/rusty-conduit-switch/config.toml
+
+# Upstream proxies. In real use these are your corporate, VPN, or homelab proxies.
+[profiles.office]
+type = "http"
+host = "office-proxy"      # Compose service name; resolved inside the container
+port = 3128
+
+[profiles.backup]
+type = "socks5"
+host = "backup-proxy"
+port = 1080
+
+[routing]
+default = "direct"
+
+# Block a domain outright.
+[[routing.rules]]
+name = "no-trackers"
+host_wildcard = ["*.doubleclick.net"]
+target = "block"
+
+# Send example.com through the office proxy; fall back to backup, then direct,
+# if the connect or proxy handshake fails.
+[[routing.rules]]
+name = "example-via-office"
+host_wildcard = ["*.example.com"]
+target = ["office", "backup", "direct"]
+
+# Everything on port 22 goes through the backup SOCKS proxy.
+[[routing.rules]]
+name = "ssh-via-backup"
+port = 22
+target = "backup"

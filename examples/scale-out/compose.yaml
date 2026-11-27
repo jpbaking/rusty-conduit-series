@@ -1,0 +1,31 @@
+# Scale-out: HAProxy spreads connections over N rusty-conduit replicas that it discovers
+# through Docker DNS. Dev and testing only.
+#
+#   docker compose up -d
+#   docker compose up -d --scale proxy=5     # grow or shrink the pool; HAProxy follows
+#   curl -x http://127.0.0.1:3128 https://example.com/
+#   open http://127.0.0.1:8404/              # HAProxy stats: one row per replica
+name: rcs-scale-out
+
+services:
+  haproxy:
+    image: haproxy:3.2
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3128:3128"   # HTTP/HTTPS, balanced
+      - "127.0.0.1:1080:1080"   # SOCKS4/4a/5, balanced
+      - "127.0.0.1:8404:8404"   # stats page
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on: [proxy]
+
+  # Any of the three CLIs works here; every replica must be configured the same.
+  proxy:
+    image: ghcr.io/jpbaking/rusty-conduit:2
+    restart: unless-stopped
+    deploy:
+      replicas: 3
+    command: ["--log-level", "DEBUG"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]

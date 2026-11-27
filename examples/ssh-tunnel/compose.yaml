@@ -1,0 +1,84 @@
+# SSH tunnel lab: an HTTP/SOCKS proxy whose traffic and DNS leave through an SSH server,
+# so clients reach a private network they cannot see directly. Dev and testing only.
+#
+#   docker compose up -d --build
+#   curl -x http://127.0.0.1:3128 http://internal-web/        # only reachable through SSH
+#   curl --socks5-hostname 127.0.0.1:1080 http://internal-web/
+#   curl http://127.0.0.1:8080/                               # ssh -L port forward
+#   docker compose exec sshd curl -sx http://127.0.0.1:8888 https://example.com/ -o /dev/null -w '%{http_code}\n'
+#
+# To use your own server instead of the lab, see docs/DOCKER-ADVANCED.md.
+name: rcs-ssh-tunnel
+
+services:
+  # Writes the lab keys, known_hosts, and SSH config into the shared "keys" volume once.
+  keygen:
+    build: ../lab/sshd
+    image: rcs-lab-sshd
+    command: ["lab-keygen"]
+    volumes:
+      - keys:/keys
+
+  # Stands in for your bastion or homelab host. It sits on the private lab-lan network.
+  sshd:
+    image: rcs-lab-sshd
+    restart: unless-stopped
+    depends_on:
+      keygen:
+        condition: service_completed_successfully
+    volumes:
+      - keys:/keys:ro
+    networks: [edge, lab-lan]
+
+  # A service only the SSH server can reach.
+  internal-web:
+    image: traefik/whoami:latest
+    networks:
+      lab-lan:
+        aliases: [internal-web]
+
+  tunnel:
+    image: ghcr.io/jpbaking/rusty-conduit-ssh:2
+    restart: unless-stopped
+    depends_on:
+      sshd:
+        condition: service_started
+    command:
+      - lab
+      - -F
+      - /keys/config
+      # Reverse proxy: clients on the SSH server egress through this container.
+      - --reverse-http-port
+      - "8888"
+      - --reverse-socks-port
+      - "8888"
+      - --reverse-block
+      - 127.0.0.0/8,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      # Anything after -- goes to ssh verbatim: here, a plain local port forward (ssh -L).
+      - --
+      - -L
+      - 0.0.0.0:8080:internal-web:80
+    ports:
+      - "127.0.0.1:3128:3128"
+      - "127.0.0.1:1080:1080"
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - keys:/keys:ro
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/3128"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    networks: [edge]
+
+volumes:
+  keys:
+
+networks:
+  edge:
+  lab-lan:
+    internal: true
