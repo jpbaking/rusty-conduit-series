@@ -18,6 +18,7 @@
       <nav aria-label="Sections">
         <a href="#tools">Tools</a>
         <a href="#flows">How it works</a>
+        <a href="#desktop-app">Desktop app</a>
         <a href="#use-cases">Use cases</a>
         <a href="#try">Try it</a>
         <a href="#docs">Docs</a>
@@ -97,7 +98,7 @@
           </article>
           <article class="tool">
             <h3><a href="https://github.com/jpbaking/rusty-conduit-gui">Rusty Conduit GUI</a> <span class="tag">beta</span></h3>
-            <p>Do all of the above from a tray app, with saved Proxies and SSH Tunnels, an encrypted secret vault, and no dependence on <code>~/.ssh</code>.</p>
+            <p>Do all of the above from a tray app, with saved Proxies and SSH Tunnels, an encrypted secret vault, and no dependence on <code>~/.ssh</code>. <a href="#desktop-app">See it →</a></p>
             <p class="get"><a href="https://github.com/jpbaking/rusty-conduit-gui/releases">Releases</a> <code>.dmg</code> <code>.msi</code>/<code>.exe</code> <code>.deb</code> <code>.rpm</code> <code>.AppImage</code></p>
           </article>
           <article class="tool">
@@ -133,7 +134,46 @@
       </div>
     </section>
 
-    <section id="use-cases">
+    <section id="desktop-app">
+      <div class="wrap">
+        <h2>The desktop app <span class="tag">beta</span></h2>
+        <p class="sub">Rusty Conduit GUI builds the same setups from a tray icon and a window: Proxies that go direct, through SSH Tunnels, through upstream proxies, or wherever Auto Switch rules send them. It saves, runs, autostarts, and reconnects them all for you.</p>
+          <figure class="gui-panel" role="tabpanel" id="gpanel-routing" aria-labelledby="gtab-routing">
+            <div class="window"><div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>Rusty Conduit GUI</span></div><picture><source media="(prefers-color-scheme: light)" srcset="img/gui/gui-routing-light.webp"><img src="img/gui/gui-routing-dark.webp" width="1200" height="760" alt="The Work proxy's Auto Switch routing table: an intranet rule with a failover chain, a staging rule routed through an SSH tunnel, and a direct default. The Route Tester below shows that wiki.corp.example:443 matched the intranet rule."></picture></div>
+            <figcaption><strong>Auto Switch rules.</strong> Drag-ordered rules where the first match wins, failover chains, and a Route Tester that checks unsaved rules without dialing anything. Saving a change on a running Proxy applies it without dropping connections.</figcaption>
+          </figure>
+          <figure class="gui-panel" role="tabpanel" id="gpanel-wizard" aria-labelledby="gtab-wizard">
+            <div class="window"><div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>Rusty Conduit GUI</span></div><picture><source media="(prefers-color-scheme: light)" srcset="img/gui/gui-wizard-light.webp"><img src="img/gui/gui-wizard-dark.webp" width="1200" height="760" loading="lazy" alt="The New Proxy dialog asking how the proxy should reach the internet: Direct, Through a tunnel, Auto Switch, or Auto Switch from an imported backup, each naming the CLI it matches."></picture></div>
+            <figcaption><strong>A proxy in one step.</strong> Pick how it reaches the internet: direct, through a Tunnel, by Auto Switch rules, or from an imported AirSwitch, ZeroOmega, or SwitchyOmega backup or a CLI <code>config.toml</code>.</figcaption>
+          </figure>
+          <figure class="gui-panel" role="tabpanel" id="gpanel-tunnel" aria-labelledby="gtab-tunnel">
+            <div class="window"><div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>Rusty Conduit GUI</span></div><picture><source media="(prefers-color-scheme: light)" srcset="img/gui/gui-tunnel-light.webp"><img src="img/gui/gui-tunnel-dark.webp" width="1200" height="760" loading="lazy" alt="The Staging bastion tunnel's connection tab, showing the route Local, then a jump host at 198.51.100.5, then the Staging bastion target, with host, port, user, sign-in and host-key settings for the selected hop."></picture></div>
+            <figcaption><strong>Visual jump chains.</strong> Build Local → Jump → Target hop by hop, each with its own port, user, sign-in, and pinned host key. The built-in Rust SSH engine needs no <code>ssh</code> binary and never reads or writes <code>~/.ssh</code>.</figcaption>
+          </figure>
+          <figure class="gui-panel" role="tabpanel" id="gpanel-vault" aria-labelledby="gtab-vault">
+            <div class="window"><div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>Rusty Conduit GUI</span></div><picture><source media="(prefers-color-scheme: light)" srcset="img/gui/gui-vault-light.webp"><img src="img/gui/gui-vault-dark.webp" width="1200" height="760" loading="lazy" alt="The Vault view listing a demo ed25519 SSH key and a demo MITM inspection CA, with upload, paste, generate, rename and delete actions."></picture></div>
+            <figcaption><strong>Encrypted vault.</strong> SSH keys, MITM CAs, and upstream passwords are encrypted per record and unlocked by the OS keyring or a master password. Secrets go in but never come back out in plaintext.</figcaption>
+          </figure>
+        <div class="gui-thumbs" role="tablist" aria-label="Desktop app screenshots">
+          <button type="button" role="tab" class="gui-thumb" id="gtab-routing" aria-controls="gpanel-routing" aria-selected="true"><picture><source media="(prefers-color-scheme: light)" srcset="img/gui/gui-routing-light.webp"><img src="img/gui/gui-routing-dark.webp" width="1200" height="760" loading="lazy" alt=""></picture><span>Auto Switch rules</span></button>
+          <button type="button" role="tab" class="gui-thumb" id="gtab-wizard" aria-controls="gpanel-wizard" aria-selected="false"><picture><source media="(prefers-color-scheme: light)" srcset="img/gui/gui-wizard-light.webp"><img src="img/gui/gui-wizard-dark.webp" width="1200" height="760" loading="lazy" alt=""></picture><span>New Proxy wizard</span></button>
+          <button type="button" role="tab" class="gui-thumb" id="gtab-tunnel" aria-controls="gpanel-tunnel" aria-selected="false"><picture><source media="(prefers-color-scheme: light)" srcset="img/gui/gui-tunnel-light.webp"><img src="img/gui/gui-tunnel-dark.webp" width="1200" height="760" loading="lazy" alt=""></picture><span>Jump chains</span></button>
+          <button type="button" role="tab" class="gui-thumb" id="gtab-vault" aria-controls="gpanel-vault" aria-selected="false"><picture><source media="(prefers-color-scheme: light)" srcset="img/gui/gui-vault-light.webp"><img src="img/gui/gui-vault-dark.webp" width="1200" height="760" loading="lazy" alt=""></picture><span>Encrypted vault</span></button>
+        </div>
+        <div class="gui-more">
+          <ul>
+            <li><strong>Tray first.</strong> Proxies and Tunnels menus on Windows, macOS, and Linux (XFCE, KDE, GNOME with AppIndicator, Waybar). Closing the window keeps everything running.</li>
+            <li><strong>Autostart and reconnect.</strong> Starts at login in the tray, runs as a single instance, and reconnects after sleep.</li>
+            <li><strong>Moves between app and server.</strong> Imports and exports <code>config.toml</code> for all three CLIs, so a setup can run headless in Docker later.</li>
+            <li><strong>Two SSH engines.</strong> Pure-Rust by default; an opt-in OpenSSH engine, isolated in a worker process, for <code>ProxyCommand</code>, GSSAPI, or hardware keys.</li>
+          </ul>
+          <p class="get"><a class="btn primary" href="https://github.com/jpbaking/rusty-conduit-gui/releases">Download the beta</a> <span><code>.dmg</code> <code>.msi</code> <code>.exe</code> <code>.deb</code> <code>.rpm</code> <code>.AppImage</code></span></p>
+          <p class="fine">Screenshots show the app's built-in demo data.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="use-cases" class="band">
       <div class="wrap">
         <h2>Use cases</h2>
         <p class="sub">Recipes that combine the pieces. Each one has a guide, and most have a runnable Compose project.</p>
@@ -186,7 +226,7 @@
       </div>
     </section>
 
-    <section id="try" class="band">
+    <section id="try">
       <div class="wrap">
         <h2>Try it in 60 seconds</h2>
         <div class="steps">
@@ -217,7 +257,7 @@ open http://127.0.0.1:8404/                            # HAProxy stats: one row 
       </div>
     </section>
 
-    <section id="docs">
+    <section id="docs" class="band">
       <div class="wrap">
         <h2>Documentation</h2>
         <div class="grid docs">
@@ -250,7 +290,7 @@ open http://127.0.0.1:8404/                            # HAProxy stats: one row 
       </div>
     </section>
 
-    <section id="agents" class="band">
+    <section id="agents">
       <div class="wrap two">
         <div>
           <h2>For AI agents</h2>
@@ -282,8 +322,8 @@ open http://127.0.0.1:8404/                            # HAProxy stats: one row 
   </footer>
 
   <script>
-    (function () {
-      var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    document.querySelectorAll('[role="tablist"]').forEach(function (list) {
+      var tabs = Array.prototype.slice.call(list.querySelectorAll('[role="tab"]'));
       function select(tab) {
         tabs.forEach(function (t) {
           var on = t === tab;
@@ -300,7 +340,7 @@ open http://127.0.0.1:8404/                            # HAProxy stats: one row 
         });
       });
       if (tabs.length) select(tabs[0]);
-    })();
+    });
     document.querySelectorAll('.copy').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var text = btn.parentElement.querySelector('code').innerText;

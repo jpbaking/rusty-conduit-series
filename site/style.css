@@ -126,6 +126,29 @@ article p, .doc p { margin: 0; color: var(--muted); font-size: 0.95rem; }
 .two li { margin-bottom: 0.6rem; color: var(--muted); }
 .two li strong { color: var(--text); }
 
+/* desktop app */
+.gui-panel { margin: 0; }
+.window { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--card); box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.55), 0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent); }
+.window-bar { display: flex; align-items: center; gap: 0.45rem; height: 2.1rem; padding: 0 0.9rem; background: var(--bg-2); border-bottom: 1px solid var(--line); }
+.window-bar i { width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--line); }
+.window-bar span { flex: 1; text-align: center; margin-right: 2.6rem; font-size: 0.8rem; color: var(--muted); }
+.gui-panel figcaption { color: var(--muted); max-width: 85ch; margin: 1rem 0 0; }
+.gui-panel figcaption strong { color: var(--text); }
+.gui-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem; margin-top: 1.5rem; }
+.gui-thumb { display: flex; flex-direction: column; gap: 0.45rem; padding: 0.45rem 0.45rem 0.6rem; background: var(--card); border: 1px solid var(--line); border-radius: 10px; cursor: pointer; font: 600 0.9rem var(--sans); color: var(--muted); text-align: left; }
+.gui-thumb img { border-radius: 6px; opacity: 0.75; transition: opacity 0.15s; }
+.gui-thumb:hover img, .gui-thumb[aria-selected="true"] img { opacity: 1; }
+.gui-thumb[aria-selected="true"] { border-color: var(--accent); color: var(--text); box-shadow: 0 0 0 1px var(--accent); }
+.gui-thumb:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+.gui-more { display: grid; grid-template-columns: 1.6fr 1fr; gap: 0 2.5rem; margin-top: 2rem; align-items: start; }
+.gui-more ul { margin: 0; padding-left: 1.1rem; grid-row: span 2; }
+.gui-more li { color: var(--muted); margin-bottom: 0.55rem; }
+.gui-more li strong { color: var(--text); }
+.gui-more .get { display: flex; flex-direction: column; gap: 0.75rem; margin: 0; }
+.gui-more .get span { display: flex; flex-wrap: wrap; gap: 0.35rem; font-size: 0.85rem; }
+.gui-more .btn { align-self: flex-start; }
+.fine { color: var(--muted); font-size: 0.82rem; margin: 0.75rem 0 0; }
+
 footer { padding: 2rem 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; }
 footer p { display: flex; align-items: center; gap: 0.5rem; margin: 0; }
 
@@ -135,6 +158,9 @@ footer p { display: flex; align-items: center; gap: 0.5rem; margin: 0; }
   .case-img img { min-width: 500px; }
   .case.wide .case-img img { min-width: 760px; }
   .nav nav a:not(.gh) { display: none; }
+  .gui-thumbs { grid-template-columns: repeat(2, 1fr); }
+  .gui-more { grid-template-columns: 1fr; }
+  .gui-more ul { margin-bottom: 1.25rem; }
   .two { grid-template-columns: 1fr; gap: 1.5rem; }
   section { padding: 3rem 0; }
   .hero { padding: 3rem 0 2.5rem; }
