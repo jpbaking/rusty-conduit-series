@@ -4,7 +4,7 @@
 - Goal ID: 20261128-optimization-phase1
 - Outcome: The workspace README counts six examples, third-party example images are pinned, the homelab smoke test waits for every pool it checks, example host ports can be overridden by environment variables so the smoke test can run beside a local proxy, and `scripts/check-workspace.py` (run in CI) checks engine-pin consistency, generated-diagram freshness, and relative Markdown links.
 - Done when: `bash -n examples/smoke-test.sh && bash -n scripts/bootstrap.sh && python3 scripts/check-workspace.py && scripts/bootstrap.sh --check` exits 0, `docker compose config -q` passes in every example, and (with Docker running) `examples/smoke-test.sh` passes for every example.
-- Goal status: awaiting-acceptance
+- Goal status: completed
 - Goal status meaning: drafting | approved | executing | blocked-on-human | in-review | awaiting-acceptance | completed | abandoned
 - Last completed phase: phase-0003
 
@@ -29,9 +29,9 @@
 - [done] phase-0003 — Workspace consistency check script and CI workflow
 
 ## Handoff
-- Current position: Gate D passed; awaiting user acceptance
+- Current position: completed
 - Next role: planner
-- Next action: present review report and ask the user to accept (note: automated squash prohibited because origin/goal/20261128-optimization-phase1 already carries f36f6ef)
+- Next action: none
 - Last verified evidence: Full verification exited 0; RCS_PORT_3128=23128 RCS_PORT_1080=21080 RCS_PORT_8080=28080 RCS_PORT_8404=28404 examples/smoke-test.sh passed all 6 examples
 - Blockers: none
 
@@ -59,3 +59,4 @@
 - planner verified phase-0002 diff and Verify checks; delegated phase-0003 to claude --model opus --effort medium via herdr-subagent
 - executor (claude opus): phase-0003 done; 4 sub-tasks done, Verify passed; added scripts/check-workspace.py and .github/workflows/check.yml, updated DOX.md and docs/WORKSPACE.md
 - planner Gate D review passed: Full verification exited 0, examples/smoke-test.sh passed all 6 examples with overridden RCS_PORT_* ports, full diff ff0f723..4caf39a reviewed with zero scope drift; set Goal status to awaiting-acceptance
+- user accepted goal on 2026-11-28; kept commits (automated squash prohibited because origin/goal/20261128-optimization-phase1 already carries f36f6ef); set Goal status to completed
