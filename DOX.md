@@ -215,7 +215,7 @@ When the owning doc lies inside a nested root, make the update there — but say
 
 ## Workspace Contract
 
-`rusty-conduit-series` is an agent workspace for the rusty-conduit family. It is also the public start page for the products. It tracks only its own files (this doc, `README.md`, `LICENSE`, `docs/`, `examples/`, `site/`, `.github/workflows/pages.yml`, the harness shims, `repos.tsv`, `scripts/`, and the ignore files). The five member repos are independent git repositories, cloned into this folder, gitignored here, and indexed below as nested roots.
+`rusty-conduit-series` is an agent workspace for the rusty-conduit family. It is also the public start page for the products. It tracks only its own files (this doc, `README.md`, `LICENSE`, `docs/`, `examples/`, `site/`, `.github/workflows/pages.yml`, `.github/workflows/check.yml`, the harness shims, `repos.tsv`, `scripts/`, and the ignore files). The five member repos are independent git repositories, cloned into this folder, gitignored here, and indexed below as nested roots.
 
 - **Bootstrap first.** On a fresh clone, or whenever a folder listed in `repos.tsv` is missing, run `scripts/bootstrap.sh` before any other work. Never clone, move, or rename a member repo by hand. Run `scripts/bootstrap.sh --pull` to fast-forward clean repos.
 - **Keep the workspace guide in step.** `docs/WORKSPACE.md` is the human guide to this contract: setup commands, copy-paste prompts, and troubleshooting. When a change here alters a command, a flag, or what agents do on their own, update `docs/WORKSPACE.md` in the same pass.
@@ -240,6 +240,7 @@ When the owning doc lies inside a nested root, make the update there — but say
 
 - `scripts/bootstrap.sh --check` exits 0: every member repo is present, has the expected `origin`, and is reported with its branch and dirty state.
 - `bash -n scripts/bootstrap.sh` passes after any change to the script.
+- `python3 scripts/check-workspace.py` exits 0 (run after `scripts/bootstrap.sh` so the engine-pin check is not skipped).
 - For changes under `examples/`, follow `examples/DOX.md` Verification (`examples/smoke-test.sh <example>`).
 - For changes to `site/` or `scripts/site-diagrams.py`, rerun `python3 scripts/site-diagrams.py`, then open `site/index.html` in a browser at desktop and phone widths, in light and dark mode; no text overflows a diagram box and every link resolves.
 - For changes to `README.md` or `docs/`, every relative link resolves, and every command or config snippet that is not already covered by an example has been run against the released image or binary.
@@ -257,6 +258,7 @@ When the user requests a durable behavior change, record it here or in the relev
 - **Series optimization roadmap** — cross-repo performance, reliability, security, and maintainability review and phased execution plan. Start: `docs/OPTIMIZATION.md`.
 - **Public start page and guides** — product overview, tool chooser, agent guidance, use-case recipes, and Docker guides. Start: `README.md`. Files: `docs/USE-CASES-BASIC.md`, `docs/USE-CASES-ADVANCED.md`, `docs/DOCKER-BASIC.md`, `docs/DOCKER-ADVANCED.md`, `LICENSE`.
 - **Project website** — GitHub Pages landing page mirroring the README, with generated flow/use-case SVG diagrams, GUI screenshots, and Pages deploy workflow. Start: `site/index.html`. Files: `site/style.css`, `site/logo.svg`, `site/img/`, `scripts/site-diagrams.py`, `scripts/site-gui-screenshots.cjs`, `.github/workflows/pages.yml`.
+- **Workspace consistency check** — engine-pin agreement across consumers and GUI docs, generated-diagram freshness, and relative Markdown links; runs in CI. Start: `scripts/check-workspace.py`. Files: `.github/workflows/check.yml`.
 - **Runnable examples** — Compose projects and their smoke test, including HAProxy scale-out. Detail in ./examples.
 - **Shared proxy engine** — HTTP/HTTPS and SOCKS engines, routing, upstream dialers, and MITM, used by every product. Start: `rusty-conduit-engine/src/lib.rs`. Detail in ./rusty-conduit-engine.
 - **Engine version pin** — the engine tag each consumer builds against. Start: `rusty-conduit-engine/Cargo.toml`. Files: `rusty-conduit/Cargo.toml`, `rusty-conduit-ssh/Cargo.toml`, `rusty-conduit-switch/Cargo.toml`, `rusty-conduit-gui/Cargo.toml`.

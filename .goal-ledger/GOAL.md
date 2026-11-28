@@ -6,7 +6,7 @@
 - Done when: `bash -n examples/smoke-test.sh && bash -n scripts/bootstrap.sh && python3 scripts/check-workspace.py && scripts/bootstrap.sh --check` exits 0, `docker compose config -q` passes in every example, and (with Docker running) `examples/smoke-test.sh` passes for every example.
 - Goal status: executing
 - Goal status meaning: drafting | approved | executing | blocked-on-human | in-review | awaiting-acceptance | completed | abandoned
-- Last completed phase: phase-0002
+- Last completed phase: phase-0003
 
 ## Execution
 - Execution mode: delegated
@@ -26,13 +26,13 @@
 ## Phases
 - [done] phase-0001 — README example count, pinned example images, homelab pool waits
 - [done] phase-0002 — Overridable example host ports
-- [ongoing] phase-0003 — Workspace consistency check script and CI workflow
+- [done] phase-0003 — Workspace consistency check script and CI workflow
 
 ## Handoff
-- Current position: phase-0003 executing
-- Next role: executor
-- Next action: finish phase-0003
-- Last verified evidence: phase-0002 verified by planner (all 5 Verify checks passed; diff clean and in-scope including quote fix on examples/smoke-test.sh:49; manual Docker smoke test deferred to Gate D)
+- Current position: phase-0003 done
+- Next role: planner
+- Next action: review phase-0003 and continue
+- Last verified evidence: phase-0003 Verify block passed (check-workspace.py printed three OK lines; workflow YAML parses; rusty-conduit clean; no diff to diagrams, site, pages.yml, README.md)
 - Blockers: none
 
 ## Review
@@ -57,3 +57,4 @@
 - delegated phase-0002 to claude --model opus --effort medium via herdr-subagent
 - executor (claude opus): phase-0002 done; 3 sub-tasks done, Verify passed; smoke-test.sh stats URL changed from single to double quotes so $p8404 expands; manual smoke test with RCS_PORT_* not run (planner item)
 - planner verified phase-0002 diff and Verify checks; delegated phase-0003 to claude --model opus --effort medium via herdr-subagent
+- executor (claude opus): phase-0003 done; 4 sub-tasks done, Verify passed; added scripts/check-workspace.py and .github/workflows/check.yml, updated DOX.md and docs/WORKSPACE.md

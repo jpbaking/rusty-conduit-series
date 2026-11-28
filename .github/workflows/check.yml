@@ -1,0 +1,17 @@
+# Runs the workspace consistency check on every push and pull request to main.
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - run: python3 scripts/check-workspace.py

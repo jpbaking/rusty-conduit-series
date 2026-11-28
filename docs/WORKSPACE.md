@@ -47,6 +47,10 @@ scripts/bootstrap.sh --check
 The script is safe to re-run. It never touches a repo with uncommitted changes,
 never switches branches, and never changes a remote.
 
+Run `python3 scripts/check-workspace.py` to check that every consumer pins the
+same engine tag, the site diagrams are current, and the docs' relative links
+resolve.
+
 ## Working with agents
 
 Start the agent (Claude Code, agy, Codex, Gemini CLI, Cline or OpenCode) **in
