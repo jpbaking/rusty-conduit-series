@@ -6,7 +6,7 @@
 - Done when: `bash -n examples/smoke-test.sh && bash -n scripts/bootstrap.sh && python3 scripts/check-workspace.py && scripts/bootstrap.sh --check` exits 0, `docker compose config -q` passes in every example, and (with Docker running) `examples/smoke-test.sh` passes for every example.
 - Goal status: executing
 - Goal status meaning: drafting | approved | executing | blocked-on-human | in-review | awaiting-acceptance | completed | abandoned
-- Last completed phase: phase-0001
+- Last completed phase: phase-0002
 
 ## Execution
 - Execution mode: delegated
@@ -25,14 +25,14 @@
 
 ## Phases
 - [done] phase-0001 — README example count, pinned example images, homelab pool waits
-- [ongoing] phase-0002 — Overridable example host ports
+- [done] phase-0002 — Overridable example host ports
 - [todo] phase-0003 — Workspace consistency check script and CI workflow
 
 ## Handoff
-- Current position: phase-0002 executing
-- Next role: executor
-- Next action: finish phase-0002
-- Last verified evidence: phase-0001 verified by planner (all 5 Verify checks passed across 6 Compose examples; diff clean and in-scope; manual Docker smoke test deferred)
+- Current position: phase-0002 done
+- Next role: planner
+- Next action: review phase-0002 and continue
+- Last verified evidence: phase-0002 ## Verify, all 5 commands exit 0 (bash -n, no fixed compose ports, compose config -q in 6 examples, RCS_PORT_3128=13128 gives published: "13128", no diff in docs/README.md/site)
 - Blockers: none
 
 ## Review
@@ -55,3 +55,4 @@
 - executor (claude opus): phase-0001 sub-tasks 1-4 done; Verify loop fails on examples/lab/ (no compose file); escalated needs-human
 - planner resolved phase-0001 escalation: updated compose-config verify loop in GOAL.md, phase-0001.md, and phase-0002.md to iterate examples/*/compose.yaml (skipping examples/lab/); re-verified and closed phase-0001
 - delegated phase-0002 to claude --model opus --effort medium via herdr-subagent
+- executor (claude opus): phase-0002 done; 3 sub-tasks done, Verify passed; smoke-test.sh stats URL changed from single to double quotes so $p8404 expands; manual smoke test with RCS_PORT_* not run (planner item)

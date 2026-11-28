@@ -12,9 +12,9 @@ services:
     image: haproxy:3.2
     restart: unless-stopped
     ports:
-      - "127.0.0.1:3128:3128"   # HTTP/HTTPS, balanced
-      - "127.0.0.1:1080:1080"   # SOCKS4/4a/5, balanced
-      - "127.0.0.1:8404:8404"   # stats page
+      - "127.0.0.1:${RCS_PORT_3128:-3128}:3128"   # HTTP/HTTPS, balanced
+      - "127.0.0.1:${RCS_PORT_1080:-1080}:1080"   # SOCKS4/4a/5, balanced
+      - "127.0.0.1:${RCS_PORT_8404:-8404}:8404"   # stats page
     volumes:
       - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
     depends_on: [proxy]

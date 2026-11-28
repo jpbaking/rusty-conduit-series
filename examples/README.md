@@ -22,7 +22,7 @@ docker compose up -d --build     # --build only matters for the SSH examples
 docker compose down -v
 ```
 
-The examples publish on `127.0.0.1` ports `3128`, `1080`, `8080`, and `8404`, so run one at a time.
+The examples publish on `127.0.0.1` ports `3128`, `1080`, `8080`, and `8404`, so run one at a time. To move a port, set `RCS_PORT_<port>` (for example `RCS_PORT_3128=13128 docker compose up -d`); `smoke-test.sh` honours the same variables.
 
 ## Test them all
 

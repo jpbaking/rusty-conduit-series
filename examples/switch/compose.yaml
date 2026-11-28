@@ -19,8 +19,8 @@ services:
       - --log-level
       - DEBUG
     ports:
-      - "127.0.0.1:3128:3128"
-      - "127.0.0.1:1080:1080"
+      - "127.0.0.1:${RCS_PORT_3128:-3128}:3128"
+      - "127.0.0.1:${RCS_PORT_1080:-1080}:1080"
     volumes:
       - ./conf:/etc/rusty-conduit-switch:ro   # mount the directory, not the file, for hot reload
     read_only: true

@@ -18,7 +18,7 @@ Owns everything under `examples/`: one folder per Compose project, `lab/sshd/` (
 ## Verification
 - `bash -n examples/smoke-test.sh` after any change to the script.
 - `docker compose config -q` in each changed example.
-- `examples/smoke-test.sh <example>` for each changed example must pass (needs Docker, `curl`, and internet access; uses host ports 1080, 3128, 8080, 8404).
+- `examples/smoke-test.sh <example>` for each changed example must pass (needs Docker, `curl`, and internet access; uses host ports 1080, 3128, 8080, 8404, each overridable with `RCS_PORT_<port>`).
 
 ## Feature Map
 - **Direct proxy** — `rusty-conduit` with a blocklist and a container client. Start: `direct/compose.yaml`.

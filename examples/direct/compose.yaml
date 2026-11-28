@@ -17,8 +17,8 @@ services:
       - --block
       - "*.doubleclick.net,169.254.169.254"   # example blocklist: an ad domain and cloud metadata
     ports:
-      - "127.0.0.1:3128:3128"   # HTTP/HTTPS
-      - "127.0.0.1:1080:1080"   # SOCKS4/4a/5
+      - "127.0.0.1:${RCS_PORT_3128:-3128}:3128"   # HTTP/HTTPS
+      - "127.0.0.1:${RCS_PORT_1080:-1080}:1080"   # SOCKS4/4a/5
     read_only: true
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
