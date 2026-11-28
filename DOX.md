@@ -253,13 +253,14 @@ When the user requests a durable behavior change, record it here or in the relev
 
 ## Feature Map
 
-- **Workspace bootstrap**: clones missing member repos and reports branch, remote, and dirty state. Start: `scripts/bootstrap.sh`. Files: `repos.tsv`, `.gitignore`, `.ignore`, `docs/WORKSPACE.md`.
-- **Public start page and guides**: product overview, tool chooser, agent guidance, use-case recipes, and Docker guides. Start: `README.md`. Files: `docs/USE-CASES-BASIC.md`, `docs/USE-CASES-ADVANCED.md`, `docs/DOCKER-BASIC.md`, `docs/DOCKER-ADVANCED.md`, `LICENSE`.
-- **Project website**: GitHub Pages landing page mirroring the README, with flow and use-case diagrams. Start: `site/index.html`. Files: `site/style.css`, `site/logo.svg`, `site/img/`, `scripts/site-diagrams.py`, `scripts/site-gui-screenshots.cjs`, `.github/workflows/pages.yml`.
-- **Runnable examples**: Compose projects and their smoke test, including HAProxy scale-out. Detail in ./examples.
-- **Shared proxy engine**: HTTP/HTTPS and SOCKS engines, routing, upstream dialers, and MITM, used by every product. Start: `rusty-conduit-engine/src/lib.rs`. Detail in ./rusty-conduit-engine.
-- **Engine version pin**: the engine tag each consumer builds against. Start: `rusty-conduit-engine/Cargo.toml`. Files: `rusty-conduit/Cargo.toml`, `rusty-conduit-ssh/Cargo.toml`, `rusty-conduit-switch/Cargo.toml`, `rusty-conduit-gui/Cargo.toml`.
-- **Product CLIs and GUI**: direct proxy, SSH-tunnel proxy, rule-switching proxy, and the desktop app over all of them. Detail in ./rusty-conduit, ./rusty-conduit-ssh, ./rusty-conduit-switch, and ./rusty-conduit-gui.
+- **Workspace bootstrap** — clones missing member repos, fast-forwards clean ones (`--pull`), and checks branch, remote, and dirty state (`--check`). Start: `scripts/bootstrap.sh`. Files: `repos.tsv`, `.gitignore`, `.ignore`, `docs/WORKSPACE.md`.
+- **Series optimization roadmap** — cross-repo performance, reliability, security, and maintainability review and phased execution plan. Start: `docs/OPTIMIZATION.md`.
+- **Public start page and guides** — product overview, tool chooser, agent guidance, use-case recipes, and Docker guides. Start: `README.md`. Files: `docs/USE-CASES-BASIC.md`, `docs/USE-CASES-ADVANCED.md`, `docs/DOCKER-BASIC.md`, `docs/DOCKER-ADVANCED.md`, `LICENSE`.
+- **Project website** — GitHub Pages landing page mirroring the README, with generated flow/use-case SVG diagrams, GUI screenshots, and Pages deploy workflow. Start: `site/index.html`. Files: `site/style.css`, `site/logo.svg`, `site/img/`, `scripts/site-diagrams.py`, `scripts/site-gui-screenshots.cjs`, `.github/workflows/pages.yml`.
+- **Runnable examples** — Compose projects and their smoke test, including HAProxy scale-out. Detail in ./examples.
+- **Shared proxy engine** — HTTP/HTTPS and SOCKS engines, routing, upstream dialers, and MITM, used by every product. Start: `rusty-conduit-engine/src/lib.rs`. Detail in ./rusty-conduit-engine.
+- **Engine version pin** — the engine tag each consumer builds against. Start: `rusty-conduit-engine/Cargo.toml`. Files: `rusty-conduit/Cargo.toml`, `rusty-conduit-ssh/Cargo.toml`, `rusty-conduit-switch/Cargo.toml`, `rusty-conduit-gui/Cargo.toml`.
+- **Product CLIs and GUI** — direct proxy, SSH-tunnel proxy, rule-switching proxy, and the desktop app over all of them. Detail in ./rusty-conduit, ./rusty-conduit-ssh, ./rusty-conduit-switch, and ./rusty-conduit-gui.
 
 ## Child DOX Index
 

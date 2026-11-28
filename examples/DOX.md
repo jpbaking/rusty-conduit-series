@@ -27,6 +27,7 @@ Owns everything under `examples/`: one folder per Compose project, `lab/sshd/` (
 - **SSH tunnel lab** — `rusty-conduit-ssh` into a private network, `-L` forward, reverse proxy. Start: `ssh-tunnel/compose.yaml`. Files: `lab/sshd/`.
 - **HAProxy scale-out** — Docker DNS discovery with `server-template`, scaled replicas. Start: `scale-out/compose.yaml`. Files: `scale-out/haproxy.cfg`.
 - **Homelab stack** — switch pool routing to egress and tunnel pools behind one HAProxy, optional MITM. Start: `homelab-stack/compose.yaml`. Files: `homelab-stack/haproxy.cfg`, `homelab-stack/conf/config.toml`, `homelab-stack/compose.mitm.yaml`, `lab/sshd/`.
+- **Lab SSH server image** — standalone Alpine `sshd` image and key generator (`lab-keygen`) shared by the SSH examples. Start: `lab/sshd/Dockerfile`. Files: `lab/sshd/lab-keygen.sh`, `lab/sshd/sshd_config`.
 - **Smoke test** — brings each example up, checks it, and tears it down. Start: `smoke-test.sh`.
 
 ## Child DOX Index
