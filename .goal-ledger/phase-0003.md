@@ -1,6 +1,6 @@
 # phase-0003 — Workspace consistency check script and CI workflow
 
-- Status: todo
+- Status: ongoing
 - Owner: executor
 - Depends on: phase-0002
 - Goal: Add `scripts/check-workspace.py`, which fails when the consumers pin different engine tags, when the generated site diagrams are stale, or when a relative Markdown link is broken, and run it in CI on every push and pull request to `main`.

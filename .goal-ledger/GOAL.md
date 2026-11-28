@@ -26,12 +26,12 @@
 ## Phases
 - [done] phase-0001 — README example count, pinned example images, homelab pool waits
 - [done] phase-0002 — Overridable example host ports
-- [todo] phase-0003 — Workspace consistency check script and CI workflow
+- [ongoing] phase-0003 — Workspace consistency check script and CI workflow
 
 ## Handoff
-- Current position: phase-0003 delegated
+- Current position: phase-0003 executing
 - Next role: executor
-- Next action: execute phase-0003
+- Next action: finish phase-0003
 - Last verified evidence: phase-0002 verified by planner (all 5 Verify checks passed; diff clean and in-scope including quote fix on examples/smoke-test.sh:49; manual Docker smoke test deferred to Gate D)
 - Blockers: none
 
