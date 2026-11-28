@@ -29,10 +29,10 @@
 - [todo] phase-0003 — Workspace consistency check script and CI workflow
 
 ## Handoff
-- Current position: phase-0002 done
-- Next role: planner
-- Next action: review phase-0002 and continue
-- Last verified evidence: phase-0002 ## Verify, all 5 commands exit 0 (bash -n, no fixed compose ports, compose config -q in 6 examples, RCS_PORT_3128=13128 gives published: "13128", no diff in docs/README.md/site)
+- Current position: phase-0003 delegated
+- Next role: executor
+- Next action: execute phase-0003
+- Last verified evidence: phase-0002 verified by planner (all 5 Verify checks passed; diff clean and in-scope including quote fix on examples/smoke-test.sh:49; manual Docker smoke test deferred to Gate D)
 - Blockers: none
 
 ## Review
@@ -56,3 +56,4 @@
 - planner resolved phase-0001 escalation: updated compose-config verify loop in GOAL.md, phase-0001.md, and phase-0002.md to iterate examples/*/compose.yaml (skipping examples/lab/); re-verified and closed phase-0001
 - delegated phase-0002 to claude --model opus --effort medium via herdr-subagent
 - executor (claude opus): phase-0002 done; 3 sub-tasks done, Verify passed; smoke-test.sh stats URL changed from single to double quotes so $p8404 expands; manual smoke test with RCS_PORT_* not run (planner item)
+- planner verified phase-0002 diff and Verify checks; delegated phase-0003 to claude --model opus --effort medium via herdr-subagent
