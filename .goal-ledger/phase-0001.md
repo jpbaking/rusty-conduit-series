@@ -1,6 +1,6 @@
 # phase-0001 — README example count, pinned example images, homelab pool waits
 
-- Status: needs-human — reason: `## Verify` line 4 `for d in examples/*/; do (cd "$d" && docker compose config -q) || exit 1; done` fails on `examples/lab/` (tracked shared sshd image folder, no compose file): `no configuration file provided: not found`. All six real examples (direct, egress-sandbox, homelab-stack, scale-out, ssh-tunnel, switch) pass `docker compose config -q`. The loop (also in GOAL.md Full verification) needs to skip folders without a compose file (for example, continue when the folder has no compose.yaml) — planner decision, the executor may not edit Verify.
+- Status: done
 - Owner: executor
 - Depends on: none
 - Goal: Correct the README's example count, pin the two unpinned third-party images, and make the `homelab-stack` smoke check wait for all three HAProxy pools before checking them.
@@ -27,7 +27,7 @@
 bash -n examples/smoke-test.sh
 test -z "$(grep -rn ':latest' examples --include='compose*.yaml')"
 grep -c 'Six runnable Compose projects' README.md
-for d in examples/*/; do (cd "$d" && docker compose config -q) || exit 1; done
+for f in examples/*/compose.yaml; do (cd "$(dirname "$f")" && docker compose config -q) || exit 1; done
 git diff --exit-code -- site docs
 ```
 - manual (planner, needs Docker running): `examples/smoke-test.sh ssh-tunnel homelab-stack direct egress-sandbox` passes.
@@ -44,6 +44,7 @@ git diff --exit-code -- site docs
 - sub-task 3: added `wait_pool switch_http 2` and `wait_pool egress_pool 2` after `wait_pool tunnel_pool 2` in the homelab-stack) block; wait_pool body untouched
 - sub-task 4: examples/DOX.md pinned-image bullet now lists whoami/curl pins and "never `:latest`"
 - Verify: lines 1-3 and 5 pass; line 4 fails on examples/lab/ (no compose file) — plan defect in the Verify command, escalated as needs-human
+- planner fixed Verify compose loop to iterate examples/*/compose.yaml (skipping examples/lab/), re-ran Verify, reviewed diff, and closed phase-0001
 
 ## Evidence
 - (append-only: command → observed result)
@@ -57,3 +58,4 @@ git diff --exit-code -- site docs
 - Verify `for d in examples/*/; do (cd "$d" && docker compose config -q) || exit 1; done` → ok direct, egress-sandbox, homelab-stack; then examples/lab/: `no configuration file provided: not found` → exit 1
 - per-example `docker compose config -q` skipping folders without compose.yaml → ok direct, egress-sandbox, homelab-stack, scale-out, ssh-tunnel, switch; lab/ skipped
 - Verify `git diff --exit-code -- site docs` → exit 0
+- planner Verify (all 5 checks incl. fixed compose loop across 6 examples) → exit 0 (ALL_OK)

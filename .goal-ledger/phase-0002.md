@@ -33,7 +33,7 @@ Mapping lines today (planner listed them): `direct` 3128, 1080; `switch` 3128, 1
 ```sh
 bash -n examples/smoke-test.sh
 test -z "$(grep -rnE '"127\.0\.0\.1:[0-9]+:[0-9]+"' examples --include=compose.yaml)"
-for d in examples/*/; do (cd "$d" && docker compose config -q) || exit 1; done
+for f in examples/*/compose.yaml; do (cd "$(dirname "$f")" && docker compose config -q) || exit 1; done
 (cd examples/direct && RCS_PORT_3128=13128 docker compose config | grep -q 'published: "13128"')
 git diff --exit-code -- docs README.md site
 ```
@@ -45,6 +45,7 @@ git diff --exit-code -- docs README.md site
 
 ## Log
 - (append-only, one line per event)
+- planner fixed Verify compose loop to iterate examples/*/compose.yaml (skipping examples/lab/) before delegating
 
 ## Evidence
 - (append-only: command → observed result)

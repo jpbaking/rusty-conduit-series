@@ -6,13 +6,13 @@
 - Done when: `bash -n examples/smoke-test.sh && bash -n scripts/bootstrap.sh && python3 scripts/check-workspace.py && scripts/bootstrap.sh --check` exits 0, `docker compose config -q` passes in every example, and (with Docker running) `examples/smoke-test.sh` passes for every example.
 - Goal status: executing
 - Goal status meaning: drafting | approved | executing | blocked-on-human | in-review | awaiting-acceptance | completed | abandoned
-- Last completed phase: none
+- Last completed phase: phase-0001
 
 ## Execution
 - Execution mode: delegated
 - Planner tier: Antigravity CLI (Gemini 4 Neon Medium)
 - Executor tier: claude --model opus --effort medium via the herdr-subagent skill
-- Full verification: bash -n examples/smoke-test.sh && bash -n scripts/bootstrap.sh && python3 scripts/check-workspace.py && scripts/bootstrap.sh --check && for d in examples/*/; do (cd "$d" && docker compose config -q) || exit 1; done
+- Full verification: bash -n examples/smoke-test.sh && bash -n scripts/bootstrap.sh && python3 scripts/check-workspace.py && scripts/bootstrap.sh --check && for f in examples/*/compose.yaml; do (cd "$(dirname "$f")" && docker compose config -q) || exit 1; done
 
 ## Git
 - Repository: yes
@@ -24,16 +24,16 @@
 - Work upstream at start: none
 
 ## Phases
-- [needs-human — reason: `## Verify` line 4 `for d in examples/*/; do (cd "$d" && docker compose config -q) || exit 1; done` fails on `examples/lab/` (tracked shared sshd image folder, no compose file): `no configuration file provided: not found`. All six real examples (direct, egress-sandbox, homelab-stack, scale-out, ssh-tunnel, switch) pass `docker compose config -q`. The loop (also in GOAL.md Full verification) needs to skip folders without a compose file (for example, continue when the folder has no compose.yaml) — planner decision, the executor may not edit Verify.] phase-0001 — README example count, pinned example images, homelab pool waits
+- [done] phase-0001 — README example count, pinned example images, homelab pool waits
 - [todo] phase-0002 — Overridable example host ports
 - [todo] phase-0003 — Workspace consistency check script and CI workflow
 
 ## Handoff
-- Current position: phase-0001 needs-human
-- Next role: planner
-- Next action: resolve phase-0001 blocker
-- Last verified evidence: reconciled on resume (branch goal/20261128-optimization-phase1, baseline ff0f723, 1 goal commit f36f6ef, validator 0 warnings; note: origin/goal/20261128-optimization-phase1 published at f36f6ef, prohibiting automated squash)
-- Blockers: `## Verify` line 4 `for d in examples/*/; do (cd "$d" && docker compose config -q) || exit 1; done` fails on `examples/lab/` (tracked shared sshd image folder, no compose file): `no configuration file provided: not found`. All six real examples (direct, egress-sandbox, homelab-stack, scale-out, ssh-tunnel, switch) pass `docker compose config -q`. The loop (also in GOAL.md Full verification) needs to skip folders without a compose file (for example, continue when the folder has no compose.yaml) — planner decision, the executor may not edit Verify.
+- Current position: phase-0002 delegated
+- Next role: executor
+- Next action: execute phase-0002
+- Last verified evidence: phase-0001 verified by planner (all 5 Verify checks passed across 6 Compose examples; diff clean and in-scope; manual Docker smoke test deferred)
+- Blockers: none
 
 ## Review
 - Reviewed by: none
@@ -53,3 +53,5 @@
 - resumed by planner (Gemini 4 Neon Medium): reconciled Git (branch goal/20261128-optimization-phase1, baseline ff0f723b4e431315951c8f09fafbe20cff3a0a94, 1 matching goal commit f36f6ef, clean tree, validator clean); noted origin/goal/20261128-optimization-phase1 published at f36f6ef (prohibits automated squash)
 - Gate C satisfied by resume request; switched executor tier to claude --model opus --effort medium via herdr-subagent; set Goal status to executing and delegated phase-0001
 - executor (claude opus): phase-0001 sub-tasks 1-4 done; Verify loop fails on examples/lab/ (no compose file); escalated needs-human
+- planner resolved phase-0001 escalation: updated compose-config verify loop in GOAL.md, phase-0001.md, and phase-0002.md to iterate examples/*/compose.yaml (skipping examples/lab/); re-verified and closed phase-0001
+- delegated phase-0002 to claude --model opus --effort medium via herdr-subagent
