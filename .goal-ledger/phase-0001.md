@@ -1,6 +1,6 @@
 # phase-0001 — README example count, pinned example images, homelab pool waits
 
-- Status: todo
+- Status: ongoing
 - Owner: executor
 - Depends on: none
 - Goal: Correct the README's example count, pin the two unpinned third-party images, and make the `homelab-stack` smoke check wait for all three HAProxy pools before checking them.

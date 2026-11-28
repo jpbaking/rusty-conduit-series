@@ -24,14 +24,14 @@
 - Work upstream at start: none
 
 ## Phases
-- [todo] phase-0001 — README example count, pinned example images, homelab pool waits
+- [ongoing] phase-0001 — README example count, pinned example images, homelab pool waits
 - [todo] phase-0002 — Overridable example host ports
 - [todo] phase-0003 — Workspace consistency check script and CI workflow
 
 ## Handoff
-- Current position: phase-0001 delegated
+- Current position: phase-0001 executing
 - Next role: executor
-- Next action: execute phase-0001
+- Next action: finish phase-0001
 - Last verified evidence: reconciled on resume (branch goal/20261128-optimization-phase1, baseline ff0f723, 1 goal commit f36f6ef, validator 0 warnings; note: origin/goal/20261128-optimization-phase1 published at f36f6ef, prohibiting automated squash)
 - Blockers: none
 
