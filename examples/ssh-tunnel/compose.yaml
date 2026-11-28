@@ -32,7 +32,7 @@ services:
 
   # A service only the SSH server can reach.
   internal-web:
-    image: traefik/whoami:latest
+    image: traefik/whoami:v1.12.0
     networks:
       lab-lan:
         aliases: [internal-web]

@@ -79,7 +79,7 @@ open http://127.0.0.1:8404/                            # HAProxy stats: one row 
 | [**Advanced use cases**](docs/USE-CASES-ADVANCED.md) | Failover chains, split and time-based rules, HTTPS inspection, lab origins with self-signed certs, reverse proxies, jump hosts, egress sandboxes for agents and CI |
 | [**Docker: basics**](docs/DOCKER-BASIC.md) | Images, `docker run`, Compose, a proxy for other containers, config, hot reload, logs, and hardening |
 | [**Docker: advanced**](docs/DOCKER-ADVANCED.md) | Every GUI feature as Compose, SSH tunnels in containers, MITM with secrets, **HAProxy scale-out with Docker DNS discovery**, and the full homelab stack |
-| [**Examples**](examples/) | Five runnable Compose projects, and a smoke test that checks each one |
+| [**Examples**](examples/) | Six runnable Compose projects, and a smoke test that checks each one |
 | [**Contributing and the agent workspace**](docs/WORKSPACE.md) | How this repo clones the five product repos and how to work across them with coding agents |
 
 Every product repo also has its own complete reference: every flag, environment variable, and TOML key, plus sizing figures and a MITM CA guide. The guides here link to the right page in each.

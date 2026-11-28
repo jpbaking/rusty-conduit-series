@@ -8,7 +8,7 @@ Owns everything under `examples/`: one folder per Compose project, `lab/sshd/` (
 
 ## Local Contracts
 - Every example runs on its own with `docker compose up -d` (plus `--build` where it uses `lab/sshd`). Stand-ins (lab sshd, stand-in upstreams, private web services) are part of the project.
-- Use only published images: `ghcr.io/jpbaking/<product>:<major>` for the products, and pinned third-party images (`haproxy:3.2`, `alpine:3.22`) where a version matters.
+- Use only published images: `ghcr.io/jpbaking/<product>:<major>` for the products, and pinned third-party images (`haproxy:3.2`, `alpine:3.22`, `traefik/whoami:v1.12.0`, `curlimages/curl:8.23.0`); never `:latest`.
 - Publish ports on `127.0.0.1` only. Proxy services run with `read_only: true`, `cap_drop: [ALL]`, and `no-new-privileges`.
 - Each example has a unique top-level `name:` (`rcs-<example>`) so Compose projects never collide.
 - Each `compose.yaml` starts with a comment that says what it shows, that it is for dev and testing only, and the commands to try it.

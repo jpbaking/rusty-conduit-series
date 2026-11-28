@@ -87,7 +87,7 @@ services:
     networks: [edge, lab-lan]
 
   internal-web:
-    image: traefik/whoami:latest
+    image: traefik/whoami:v1.12.0
     networks: [lab-lan]
 
 volumes:

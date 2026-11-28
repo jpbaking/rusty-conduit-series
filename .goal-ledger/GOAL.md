@@ -24,16 +24,16 @@
 - Work upstream at start: none
 
 ## Phases
-- [ongoing] phase-0001 — README example count, pinned example images, homelab pool waits
+- [needs-human — reason: `## Verify` line 4 `for d in examples/*/; do (cd "$d" && docker compose config -q) || exit 1; done` fails on `examples/lab/` (tracked shared sshd image folder, no compose file): `no configuration file provided: not found`. All six real examples (direct, egress-sandbox, homelab-stack, scale-out, ssh-tunnel, switch) pass `docker compose config -q`. The loop (also in GOAL.md Full verification) needs to skip folders without a compose file (for example, continue when the folder has no compose.yaml) — planner decision, the executor may not edit Verify.] phase-0001 — README example count, pinned example images, homelab pool waits
 - [todo] phase-0002 — Overridable example host ports
 - [todo] phase-0003 — Workspace consistency check script and CI workflow
 
 ## Handoff
-- Current position: phase-0001 executing
-- Next role: executor
-- Next action: finish phase-0001
+- Current position: phase-0001 needs-human
+- Next role: planner
+- Next action: resolve phase-0001 blocker
 - Last verified evidence: reconciled on resume (branch goal/20261128-optimization-phase1, baseline ff0f723, 1 goal commit f36f6ef, validator 0 warnings; note: origin/goal/20261128-optimization-phase1 published at f36f6ef, prohibiting automated squash)
-- Blockers: none
+- Blockers: `## Verify` line 4 `for d in examples/*/; do (cd "$d" && docker compose config -q) || exit 1; done` fails on `examples/lab/` (tracked shared sshd image folder, no compose file): `no configuration file provided: not found`. All six real examples (direct, egress-sandbox, homelab-stack, scale-out, ssh-tunnel, switch) pass `docker compose config -q`. The loop (also in GOAL.md Full verification) needs to skip folders without a compose file (for example, continue when the folder has no compose.yaml) — planner decision, the executor may not edit Verify.
 
 ## Review
 - Reviewed by: none
@@ -52,3 +52,4 @@
 - Gate B: isolated branch goal/20261128-optimization-phase1 created from main at baseline ff0f723b4e431315951c8f09fafbe20cff3a0a94; user asked to commit only and not start execution yet
 - resumed by planner (Gemini 4 Neon Medium): reconciled Git (branch goal/20261128-optimization-phase1, baseline ff0f723b4e431315951c8f09fafbe20cff3a0a94, 1 matching goal commit f36f6ef, clean tree, validator clean); noted origin/goal/20261128-optimization-phase1 published at f36f6ef (prohibits automated squash)
 - Gate C satisfied by resume request; switched executor tier to claude --model opus --effort medium via herdr-subagent; set Goal status to executing and delegated phase-0001
+- executor (claude opus): phase-0001 sub-tasks 1-4 done; Verify loop fails on examples/lab/ (no compose file); escalated needs-human

@@ -126,6 +126,8 @@ for ex in "${examples[@]}"; do
       cfg=/etc/rusty-conduit-switch/config.toml
       dc up -d --build >/dev/null 2>&1
       wait_pool tunnel_pool 2
+      wait_pool switch_http 2
+      wait_pool egress_pool 2
       expect "switch pool up" 2 pool_up switch_http
       expect "egress pool up" 2 pool_up egress_pool
       expect "tunnel pool up" 2 pool_up tunnel_pool

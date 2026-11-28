@@ -35,7 +35,7 @@ services:
 
   # Stand-in for your agent or build container. It sees only the sandbox network.
   agent:
-    image: curlimages/curl:latest
+    image: curlimages/curl:8.23.0
     entrypoint: ["sleep", "infinity"]
     environment:
       http_proxy: http://egress-proxy:3128

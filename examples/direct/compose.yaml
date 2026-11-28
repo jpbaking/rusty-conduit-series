@@ -31,7 +31,7 @@ services:
 
   # Any container on the same network reaches the proxy by its service name.
   app:
-    image: curlimages/curl:latest
+    image: curlimages/curl:8.23.0
     profiles: [demo]   # only runs with "docker compose run app"
     command: ["-sS", "-o", "/dev/null", "-w", "%{http_code} via proxy\n", "https://example.com/"]
     environment:
