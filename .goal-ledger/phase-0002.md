@@ -1,6 +1,6 @@
 # phase-0002 — Overridable example host ports
 
-- Status: todo
+- Status: ongoing
 - Owner: executor
 - Depends on: phase-0001
 - Goal: Let every example's published host port be overridden with `RCS_PORT_<default port>` (for example `RCS_PORT_3128=13128`), and make the smoke test use the same variables, so it can run while a developer's own proxy holds 3128 or 1080.
