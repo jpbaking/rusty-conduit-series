@@ -89,6 +89,7 @@ curl --cacert ca.pem -x http://127.0.0.1:3128 https://example.com/
 - Access records now show each decrypted request's method, full URL, and status, with `mitm=true`. HTTP/1.1 and HTTP/2 are supported.
 - Clients must trust `ca.pem`. Trust it per tool where you can (`curl --cacert`, `NODE_EXTRA_CA_CERTS`, `REQUESTS_CA_BUNDLE`, `SSL_CERT_FILE`) rather than system-wide.
 - With switch, MITM also enables URL rules on HTTPS, so requests on one tunnel can go to different upstreams.
+- To leave specific pinned or sensitive hosts untouched by MITM, pass `--mitm-bypass-host` (or `[mitm] bypass_hosts = [...]`, using the same exact domain, `*.domain`, IP, or CIDR syntax), or set `bypass_mitm = true` on individual routing rules in `rusty-conduit-switch` / `rusty-conduit-gui`; matching `CONNECT` tunnels pass through opaquely (`mitm=false`).
 - `--socks-block-web` refuses HTTP and HTTPS over SOCKS, so web traffic cannot dodge inspection by switching protocols.
 - Protect the key: a dedicated CA, `chmod 600`, never in Git or an image. Remove the CA from every trust store when you are done.
 
