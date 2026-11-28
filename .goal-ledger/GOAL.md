@@ -4,14 +4,14 @@
 - Goal ID: 20261128-optimization-phase1
 - Outcome: The workspace README counts six examples, third-party example images are pinned, the homelab smoke test waits for every pool it checks, example host ports can be overridden by environment variables so the smoke test can run beside a local proxy, and `scripts/check-workspace.py` (run in CI) checks engine-pin consistency, generated-diagram freshness, and relative Markdown links.
 - Done when: `bash -n examples/smoke-test.sh && bash -n scripts/bootstrap.sh && python3 scripts/check-workspace.py && scripts/bootstrap.sh --check` exits 0, `docker compose config -q` passes in every example, and (with Docker running) `examples/smoke-test.sh` passes for every example.
-- Goal status: approved
+- Goal status: executing
 - Goal status meaning: drafting | approved | executing | blocked-on-human | in-review | awaiting-acceptance | completed | abandoned
 - Last completed phase: none
 
 ## Execution
 - Execution mode: delegated
-- Planner tier: Claude Code (claude-opus-5-5)
-- Executor tier: agy --model gemini-4-neon-medium via the herdr-subagent skill
+- Planner tier: Antigravity CLI (Gemini 4 Neon Medium)
+- Executor tier: claude --model opus --effort medium via the herdr-subagent skill
 - Full verification: bash -n examples/smoke-test.sh && bash -n scripts/bootstrap.sh && python3 scripts/check-workspace.py && scripts/bootstrap.sh --check && for d in examples/*/; do (cd "$d" && docker compose config -q) || exit 1; done
 
 ## Git
@@ -29,10 +29,10 @@
 - [todo] phase-0003 — Workspace consistency check script and CI workflow
 
 ## Handoff
-- Current position: approved; branch prepared, execution not started
-- Next role: planner
-- Next action: Gate C — wait for the user to start execution, then begin phase-0001
-- Last verified evidence: none
+- Current position: phase-0001 delegated
+- Next role: executor
+- Next action: execute phase-0001
+- Last verified evidence: reconciled on resume (branch goal/20261128-optimization-phase1, baseline ff0f723, 1 goal commit f36f6ef, validator 0 warnings; note: origin/goal/20261128-optimization-phase1 published at f36f6ef, prohibiting automated squash)
 - Blockers: none
 
 ## Review
@@ -50,3 +50,5 @@
 - the example smoke test needs a running Docker daemon; it was not running when this plan was written
 - user approved the goal (Gate A) on 2026-11-28
 - Gate B: isolated branch goal/20261128-optimization-phase1 created from main at baseline ff0f723b4e431315951c8f09fafbe20cff3a0a94; user asked to commit only and not start execution yet
+- resumed by planner (Gemini 4 Neon Medium): reconciled Git (branch goal/20261128-optimization-phase1, baseline ff0f723b4e431315951c8f09fafbe20cff3a0a94, 1 matching goal commit f36f6ef, clean tree, validator clean); noted origin/goal/20261128-optimization-phase1 published at f36f6ef (prohibits automated squash)
+- Gate C satisfied by resume request; switched executor tier to claude --model opus --effort medium via herdr-subagent; set Goal status to executing and delegated phase-0001
